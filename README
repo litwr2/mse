@@ -1,0 +1,40 @@
+Basic Installation
+==================
+You need C++ compiler only.
+
+The simplest way to compile this program is:
+
+  1. Edit makefile to set correct BINDIR for your system.
+
+  2. Type `make' to compile the program.
+
+  3. Optionally, type `make test' to run a self-test that comes with
+     the package.
+
+  4. Type `make install' to install the program (install documentation 
+     manually).
+
+
+A NOTE ON USAGE
+===============
+You may use mse with the same filename for input and output.
+
+
+BUGS, SUGGESTIONS, ETC.
+-----------------------
+   Please write me if you have trouble running mse, or if you have 
+suggestions or patches.
+
+	Vladimir Lidovski
+	litwr@yandex.ru
+	http://litwr.boom.ru
+
+COPYRIGHT/LICENSE
+-----------------
+   All source code is Copyright (C) 2002 Lidovski Vladimir
+
+   This program is distributed under the GNU General Public License, Version
+2, or, at your discretion, any later version. The GNU General Public License
+is available via the Web at <http://www.gnu.org/copyleft/gpl.html>. The GPL
+is designed to allow you to alter and redistribute the package, as long as
+you do not remove that freedom from others.

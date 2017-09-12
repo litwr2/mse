@@ -1,0 +1,82 @@
+c MSE test suit
+
+begin > store(0) '000' endstore
+    store(d) '12345' 
+    store(n) '111' 
+    append(d) '67890' endstore
+    set(l1) clear(l2)
+
+define(m0) > write 'Enter number ' 
+define(m1) > mod(n) '5'
+
+'a\
+b' > 'b\
+a'   %'ab' > 'ba'
+
+'3' > 'Y'
+'3' fol(d) > 'X'
+'3' any(d) > 'Z' symdup(1) back(1)
+
+'4' > 'Y'
+'4' fol(d) > 'X'
+
+'5' > 'Y'
+'5' prec(d) > 'X'
+'5' preci(d) > 'W'
+
+'6' wd(d) > 'V'
+'6' > 'Y'
+
+'7' wd(d) > 'V'
+'7' preci(d) fol(d) > 'T'
+
+'9' wd(d) > 'S'
+'9' preci(d) fol(d) > 'T'
+
+'0' > dup fwd(1)
+
+'1' cont(n) '1' > add(n)'23' mul(n)'17' sub(n)'18' div(n)'11' sub(n)'200'
+    decr(n) mul(n)cont(n) incr(n) '(' out(n) ')'
+
+'111' > write 'Enter numbers several times but only the last correct' nl 
+    begin do(m0) wrstore(n) write ': ' 
+    store(i1) read endstore ifneq(i1)cont(n) repeat endif end
+    begin do(m0) write 'greater than 24: ' store(i2) read endstore 
+    ifgt(i2)'24' else repeat endif end  
+    mod(i2)'1' add(i2)cont(i1) sub(i2)'24' store(i1) outs(i2) '1' outs(i1) 
+    out(i1) '17' back(5)
+
+'11' > do(m1) dup out(n)
+
+'b' prevsym(1) prevsym(1) > '3B'
+
+'cd' > symdup(1) symdup(0)
+
+'e' > use(2)
+
+'i' > 'I' use(3)
+
+'22' > dup use(4,5)
+
+'0 0' > next
+' 0' > ifeq(n)'2' begin '020' end
+
+nl > incr(0) nl
+
+'EOF' > endfile
+
+endfile > 'This file consists of ' out(0) ' lines' nl
+
+	group(2)
+'' > omit(1)
+'h' > dup '' incl(1) excl(2)
+
+	group(3)
+'g' > 'G' backi(1) back(1) omit(1) back(1) use(1)
+
+	group(4)
+'2' > if(l1) '(' dup ')' else '[' dup ']' endif not(l1)
+      ifn(l2) '*' set(l2) 
+
+	group(5)
+nl > nl back(1) use(1)

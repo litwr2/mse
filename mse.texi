@@ -1,0 +1,3437 @@
+\input texinfo  @c -*-texinfo-*-
+@c %**start of header
+@setfilename mse.info
+@settitle mse, a multi stream editor
+@c %**end of header
+
+@c This file has the new style title page commands.
+@c Run `makeinfo' rather than `texinfo-format-buffer'.
+
+@afourpaper
+
+@tex
+\overfullrule=5pt
+@end tex
+
+@set UPDATED 24 June 2007
+@set EDITION 1.00
+@set VERSION 2.02
+
+@ifnottex
+This file documents @sc{mse}, a multi stream editor.
+
+
+Copyright (C) 2002 V. Lidovski
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation.
+@end ifnottex
+
+@setchapternewpage off
+
+@titlepage
+@title mse, a multi stream editor
+@subtitle version @value{VERSION}, @value{UPDATED}
+@author by Vladimir Lidovski
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2002 V Lidovski
+
+@sp 1
+This manual uses ``Consistent Changes User's Guide. Version 7.4 June 1991.
+@copyright{} copyright June, 1991 JAARS, Inc'' as template.
+
+@sp 2
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation.
+
+@end titlepage
+@page
+
+
+@node Top
+@comment  node-name,  next,  previous,  up
+
+@ifnottex
+This document was produced for version @value{VERSION} of @sc{mse}.
+@end ifnottex
+
+@menu
+* Introduction To MSE::
+* Creating And Using A Table::  Creating And Using A Change Table
+* Changes Description::         Changes Table Description
+* Advanced Features::
+* Comparison::                  Comparison with SIL CC
+* Quick Reference::
+* Literature::
+@end menu
+
+@contents
+
+@node Introduction To MSE
+@chapter Introduction To MultiStream Editor
+
+@sc{mse} is a multi stream editor.
+A multi stream editor is used to perform basic text
+transformations on an input stream
+(a file or input from a pipeline).
+It in some ways is similar to another stream editors 
+(such as @sc{sed} or @sc{awk}) but it can process binary data as well as
+text.
+
+
+@node Notes on This Manual
+@section Notes on This Manual
+
+@node Purpose
+@subsection Purpose
+
+This manual is basically designed to be a reference manual, although 
+instructional information has been included on some of the more advanced 
+features of the @sc{mse} program. The purpose of the manual is to fully 
+describe the this program. 
+
+
+@node Prerequisites for Understanding This Manual
+@subsection Prerequisites for Understanding This Manual
+
+@enumerate
+@item
+Familiarity with the computer to be used and a working knowledge of 
+file system, including how to change directories and start programs from 
+the console prompt.
+
+@item
+Ability to use @sc{emacs} or some other word processor to produce 
+unformatted text files.
+
+(See the manual for your word processing program if you are unsure of how to do this.)
+@end enumerate
+
+@node Documentation Conventions
+@subsection Documentation Conventions
+
+The following visual cues have been used in this documentation to help you 
+interpret the information presented.
+
+@table @r
+@item @i{italic} type 
+Used for anything that you must type exactly as shown.
+
+Italic type is also used for @sc{mse} commands and their arguments, 
+reference to a specific part of a @sc{mse} table, or words that are 
+given special emphasis.
+
+@item @b{bold} type 
+Used for information you must provide. For example, in place of the word 
+@b{filename}, type in the name of a file. 
+
+@item ALL CAPITALS 
+Used for directory names, file names, acronyms, and command names.
+
+@item @kbd{@key{Ctrl}+key} 
+The plus sign between key names means that you hold down the first key and 
+press the second key. For example, @kbd{@key{Ctrl}+c} means hold the 
+@key{Ctrl} key down and press c.
+@end table
+
+The contents of files will be shown as mono-spaced type. The computer's 
+response to what is typed will also appear as mono-spaced type.
+
+@node How Can MultiStream Editor Help Me?
+@section How Can MultiStream Editor Help Me?
+
+The @sc{mse} program is useful for finding all occurrences of specified 
+characters, words, or phrases in a text file or series of text files, 
+and making some type of change to this data in
+a consistent way. The change may be done in every occurrence found or 
+only when certain conditions are met.
+
+@sc{mse} is like the ``search and replace''  feature in a text editor, 
+except much more powerful because it allows you to make changes which take 
+context into consideration. Beyond the search and replace feature, @sc{mse} 
+can also be used to count words in a text, insert or remove text, or 
+reorder parts of a text.
+
+@node Creating And Using A Table
+@chapter Creating And Using A Change Table
+
+@node Creating a Change Table
+@section Creating a Change Table
+
+In order to use the @sc{mse} program, you must have a text 
+file that describes the changes you want made. This file is called a 
+change table. You may either use an existing change table, modify 
+an existing table or create your own table. The table can be executed 
+by running the MultiStream Editor program as described in 
+@ref{Using a Change Table}. A change table can be created or modified 
+using @sc{emacs} or almost any 
+other word processor. If you are using some program other than 
+@sc{emacs}, be sure that you save your document as an unformatted text 
+file. The filename extension ``.mse''  or ``.cct'' is commonly used 
+when naming @sc{mse} tables.
+
+The simplest change table instruction will have a @emph{searched-for item 
+(search string)} in a pair of quotes (double or single). This will be 
+followed on the same line by a space, a right wedge, and another space. 
+Next will be the desired @emph{replacement (replacement string)},
+again in quotes. The right wedge is an integral part of the @sc{mse} command 
+and is not enclosed within quote marks. The right wedge separates the 
+search side of the table entry from the replacement side.
+
+For example, suppose you wanted to change all occurrences of ``house'' to 
+``home''. In a small text file, you would probably make the changes 
+yourself in your word processor. However, making the changes to a large 
+file, or a whole series of files, could take a longtime, and typing 
+errors might occur in the process.
+
+The following simple @sc{mse} table could be used to accomplish this change 
+quickly and accurately:
+
+@example
+"house" > "home" 
+@exdent Input:    
+Our house is a very fine house.  We like our house. 
+@exdent Output:
+Our home is a very fine home.  We like our home.
+@end example
+
+@xref{Form of Changes} for a more detailed description of the format of a 
+change table. 
+
+As you write your change table, it is very important 
+to remember how the @sc{mse} program works: @sc{mse} ``reads''  
+your text file @emph{one character at a time}. As the program 
+reads a character, it tries to match it to a search string on the 
+left side of the change table. If it matches 
+an entry the program obeys the commands on the right side of the table 
+and the replacement text is sent to the output. The piece of input 
+that matched does not go to the output. Remember that @sc{mse} is a search 
+and replace program. Once it finds what it is searching for, it replaces 
+it with something else. If a character of text doesn't match any search 
+string, it goes straight to the output and the @sc{mse} program reads the 
+next character. 
+
+@node Using a Change Table
+@section Using a Change Table
+
+This section assumes that you have found the file 
+@sc{mse} on your diskettes, and that it
+has been copied into your current directory or into a directory that 
+has been included in your path.
+
+When you run @sc{mse}, it requires from you three filenames: the changes 
+file, the output file, and the input file, and optional log file. The 
+changes file contains the instructions that tell @sc{mse} what to change. 
+The output file is the file  @sc{mse} will create as it 
+applies the changes to the input file. The input file contains the text 
+you want changed.
+
+The @sc{mse} program doesn't actually change the input text file, it creates 
+a new text file like your original input file, except the changes specified 
+in the change table have been made to it. So, in the end you will have 
+a ``before''  and ``after''  version of your file. 
+
+If you want multiple files combined into one output file, enter several 
+input files. Any number of files can be combined in this manner. 
+
+If for any reason you need to stop the program after it has 
+started, press @kbd{@key{Ctrl}+c}. If you were outputting to a printer, a few 
+more lines may continue to print because the printer holds some of the 
+information internally before printing it.
+
+(@xref{I/O Options} for a description of other I/O options available).
+
+
+@node Changes Description
+@chapter Changes Table Description
+
+
+@node Form of Changes
+@section Form of Changes
+
+A change file must be created before @sc{mse} is run. A change file is a 
+text file which consists of one or more change entries. All change entries 
+are of the form:
+
+@example
+search  >  replacement 
+@end example
+
+The search must fit on a single line. The right wedge (>) must be on the 
+same line as the search. The replacement may be any number of lines. Blank 
+lines are allowed. Long lines may be broken into pieces by the backslash at 
+last position of the each (except the last) pieces. For example:
+
+@example
+"a\
+b" > "c\
+d"
+@end example
+
+means the same as
+
+@example
+"ab" > "cd"
+@end example
+
+Both the search and the replacement are made up of any combination 
+of the following elements:
+
+@table @strong
+@item 1. Strings 
+This is a sequence of one or more printable characters. Such 
+sequences of characters are enclosed within matching 
+sets of single or double quotes. If the replacement 
+is on more than one line, each line must be enclosed in its own set 
+of quotes. Any string containing a single quote mark must be enclosed 
+in double quote marks, and any string containing a double quote mark 
+must be enclosed in single quote marks.
+
+@item 2. Commands or keywords
+These are short or abbreviated words which 
+instruct the Changes program to perform
+certain functions. Commands are not enclosed in quotes. Commands must 
+be surrounded by spaces or tabs. The commands are listed in 
+@ref{Command Description}.
+
+@item 3. ASCII codes
+It is sometimes necessary to use non-printing @sc{ascii} codes in a @sc{mse} 
+table. Both printing and non-printing characters can be represented with 
+@sc{ascii} codes; however, it is usually best to simply enclose a printing 
+character in quotation marks rather than use its corresponding @sc{ascii} 
+code. For example, it is easier to type and understand @emph{'A'} than its 
+decimal value @emph{d65}.
+
+A complete chart of @sc{ascii} codes has been included in @ref{ASCII Codes}. 
+Discussion follows on decimal, hexadecimal, and octal codes, respectively. 
+
+The @emph{decimal} @sc{ascii} value of the character may be used, 
+@emph{without} quotes, if it is immediately preceded by a @emph{d} 
+(either upper or lower case). For example, @emph{d8} would represent a 
+<BACKSPACE>, and @emph{d9} a <TAB>). The @i{d} and the @sc{ascii} code 
+@emph{must be surrounded by spaces or tabs}. @sc{ascii} control codes are listed at the very end of 
+this manual. The decimal codes 0--255 are legal before and after the 
+wedge. 
+
+The hexadecimal @sc{ascii} value of the character may be used, without quotes, 
+if it is immediately preceded by an ``x''  (either upper or lower case). 
+For example, x8 would represent a <BACKSPACE>). If and only if 
+hexadecimal is used, only one ``x''  need precede multiple @sc{ascii} codes 
+(eg. X7E08 is tilde and <BACKSPACE>). If you do this, however, 
+be sure that each @sc{ascii} code is expressed using 2 digits (eg. tilde 
+and <BACKSPACE> should be represented by x7E08, not x7E8). The hexadecimal 
+codes 0--FF are legal before and after the wedge. 
+
+Note: @i{Octal} may be used by @i{not} preceding the @sc{ascii} code with 
+anything (eg. 10 is <BACKSPACE>). The octal codes 0--377 are legal 
+before and after the wedge. 
+
+@item 4. Spaces or tabs
+Spaces and tabs separate the strings, commands, and @sc{ascii} codes from one 
+another and from the wedge. These spaces and tabs are ignored by 
+@sc{mse} during processing, but at least one space or tab is required as a 
+separator.
+@end table
+
+
+@node How Changes are Processed
+@section How Changes are Processed
+
+Once a match string has been found in the input data, the program does 
+whatever is on the replacement side of the wedge. The matched string is not 
+sent to output unless the replacement side contains a @i{dup} command or 
+explicitly puts it into the output. Then, instead of continuing 
+to move through the table with the same data, it moves on to the next 
+piece of input data. Data is only processed once, unless it is brought 
+back into the input from the output with the @i{back(v)} or @i{backi(v)} 
+command.
+
+@node Order of Changes
+@section Order of Changes
+
+Change entries are sorted by @sc{mse} prior to any processing of the 
+input text. They are sorted according to the number of characters that 
+are being searched for on the left side of the wedge, longest search 
+string first. If the word ``sentimental''  was in the input file, it 
+would be changed to ``emotional,''  not ``sentipeopletal'' in the output 
+file, because @sc{mse} uses the longest match string (in this case, line 2) 
+first.
+
+@example
+"men"          > "people"      c line 1 
+"sentimental" > "emotional"   c line 2
+@end example
+
+If more than one group is being used, the changes are not mixed. Groups 
+will be searched in the order requested, regardless of the length of 
+change strings in any of the other groups. @i{Within} the groups, however, 
+changes will be searched longest first. 
+
+Note that in the following 
+example, line 2 has precedence over line 1:
+
+@example
+begin > store(affix) "abc" endstore 
+"test"            > "x"     c line 1 
+"test" fol(affix) > "y"     c line 2
+@end example
+
+Also, @i{any(name)} takes precedence over @i{fol(name)} or @i{prec(name)}. 
+In the following example, line 2 has precedence over line 1:
+
+@example
+begin > store(affix) "abc" endstore 
+
+"test" fol(affix) > "fol"   c line 1 
+"test" any(affix) > "any"   c line 2
+@end example
+
+The reason for this is that @i{fol(name)} and @i{prec(name)} are 
+@i{conditions for} the match, not @i{part of} the match, as opposed to 
+@i{any(name)}, which is actually @i{part of} the match 
+(@xref{Changes Description} for a more detailed information 
+on @i{fol(name)}, @i{prec(name)}, and @i{any(name)}).
+
+In general, the following rule is used when @sc{mse} is sorting entries: 
+@i{any(name)} has the same weight as one full character, @i{fol(name)} and 
+@i{prec(name)} each have weight of 1/1000th of a character. This guarantees 
+that entries with @i{fol(name)} or @i{prec(name)} will take precedence over 
+similar entries without the @i{fol(name)} or @i{prec(name)} (as in EXAMPLE 2), 
+but entries with @i{any(name)} will take precedence over similar entries with 
+@i{fol(name)} (as in EXAMPLE 3).
+
+The only time search entries are not sorted by length is when they 
+have the same relative length --- for example:
+
+@example
+begin > store(1) 'aeiou' endstore 
+'xa' > 'ksa' 
+'x' any(1) > dup
+@end example
+
+In this case @sc{mse} will process the lines in order. When the string 
+``xa'' is encountered ``ksa''will be output. Even though the next entry 
+would also match the input and appears longer, @sc{mse} equates both 
+lines as having the same length. Thus, the ``xa''  entry remains first in 
+this group and is processed first.
+
+Just to cover all the other cases where ordering of table entries might 
+cause problems, @sc{mse} has an `unsorted' option so that you can completely 
+suppress @sc{mse}'s sorting. To use this option, place the keyword 
+@samp{unsorted} on the  begin line as in the following example:
+
+@example
+begin > unsorted 
+
+"a"  > "x" 
+"ab" > "y"
+@end example
+
+When @sc{mse} is processing this table, it will always search the entries 
+in the order they physically appear in the table, thus for the input 
+text ``abc''  the output would be ``xbc''  (rather than the output of 
+``yc''  which would be expected if the @samp{unsorted} option was omitted).
+
+WARNING WARNING WARNING: I STRONGLY discourage use of the @samp{unsorted}
+option because it violates the ``longest match first''  principle. This 
+can make a table very confusing for a human reader to understand or 
+predict what will happen to his data because it changes the very nature 
+of how @sc{mse} operates.
+
+@node Command Description
+@section Command Description
+
+In the list of commands that follows, you will notice that some commands 
+take a parenthesized argument (an example of an argument is the @i{name} 
+in @i{store(name)}).
+
+Some commands that take an argument take a value, represented by (v). 
+There are six such commands:
+
+@example
+back(v) 
+fwd(v) 
+omit(v)
+backi(v)
+prevsym(v)
+symdup(v)
+@end example
+
+Other commands that take an argument take a string, represented by 
+name. Any combination of printable characters (including numbers) 
+can be used in a string as an argument for these commands (except a 
+comma, which is used as a separator for multiple arguments).
+
+There are four classes of elements which can be named: 
+
+@itemize @minus{}
+@item 
+defined sets of commands
+
+@item
+groups
+
+@item
+storage areas
+
+@item
+switches
+@end itemize
+
+The naming of each is totally independent of the naming of any of the 
+others. (eg. nothing automatically happens to switch 
+@i{examp} when something is stored in area examp).
+
+Any command which takes a parenthesized string argument @i{name} may take 
+more than one string, separated by commas (i,j,k). This has the effect 
+of repeating the command. For example, @i{if(1,2)} is the same as 
+@i{if(1) if(2)}. For some commands (eg., @i{define}) the use of multiple 
+names is meaningless; for others it could be misleading (eg., 
+@i{use(1,2)} does not equal @i{use(1) use(2)}).
+
+@table @strong
+@item add(name) `number' --- ADD number TO STORE name
+This command adds the value of number to the value in storage area name. 
+It can only be used on the right side of the wedge. The results of the 
+operation are stored in name, replacing name's previous contents. For 
+example, the following will output ``56'' :
+
+@example
+begin  > store(test) '22' endstore
+         add(test) '34'         
+         out(test)
+@end example
+
+Note: A sign (+ or @minus{}) may precede the number. 
+Leading zeros in a storage area will be removed after an add 
+(or any other arithmetic operation except @i{incr} and @i{decr}). 
+If @i{store(test)} had``0022'' in the above 
+example before the add operation, the final result would still be ``56''.
+
+@item any(name) --- ANY ELEMENT OF STORAGE AREA name
+
+This function causes a match if any single character in the specified 
+storage area is found in the input data. It may be combined with a string 
+or used alone. This command can only be used on the left side of the wedge. 
+It is useful for matching words which use any element of a closed class 
+(eg., any vowel). In contrast to the @i{preci}, @i{prec}, @i{fol}, and @i{wd} 
+commands, the character is actually matched and can be output with @i{dup} or 
+stored in a storage area. 
+
+For example, you could change all the consonants to @i{C} and all the vowels 
+to @i{V} in a text,then run it through the word count program (@code{wc}) to 
+get a count of all the word-level CV patterns:
+
+@example
+begin > store(vowel) 'aeiou' endstore
+     store(cons) 'bcdfghjklmnpqrstvwxyz' endstore
+     store(punct) '.,"?:;!()[]@{@}' endstore
+any(vowel) > 'V'    c Vowels become V
+any(cons)  > 'C'    c Consonants become C 
+any(punct) > ''     c Remove punctuation
+@end example 
+
+This will delete all punctuation, change all vowels to 'V', and all 
+consonants to 'C'. 
+
+See also the example under the @i{fol} command. 
+
+@item append(name) --- APPEND TO STORAGE AREA name
+This command is quite similar to the @i{store(name)} command. However, the 
+@i{store(name)} command causes the previously 
+stored contents of area @i{name} to be discarded, whereas the
+@i{append(name)} command @i{retains the previous contents} and inserts the 
+new data at the ``end,'' following any data that was already in the 
+storage area. This command can only be used on the right side of the 
+wedge. 
+
+@item back(v) --- MOVE BACK v CHARACTERS FROM OUTPUT
+This command causes the last @i{v} characters output to be removed from 
+output or storage and put back into the input stream of text, so it can 
+be checked for a match again. 
+
+This command can only be used on the right side of the wedge. 
+The maximum number of characters that can be backed is to the beginning of 
+the storage area (or output). For example:
+
+@example
+'  ' > ' ' back(1) 
+@end example 
+
+changes all sequences of spaces to one space, because 
+the space character that has been output can again be a part of the 
+following match. 
+
+Be careful when using the @i{back} command, since it is easy for the table 
+to become hung up in an endless loop. If you use the @i{back} command, make 
+sure there is either something else in the group that will match the 
+results or send the table to another group with the @i{use} command. For 
+example:
+
+@example
+group(1) c make orthographic changes in word entries only
+   '\w' > dup use(2)
+
+group(2) c change ae to e and return to group one
+   'ae' > 'e'
+   '\' > dup back(1)
+@end example
+
+Without a @i{use} command to get the program out of @i{group(2)}, the 
+program will hang up when it comes to the next back slash. It will recognize 
+the back slash, dup it, back up, recognize the back slash, dup it, 
+back up ... on and on. 
+
+
+@item backi(v) --- MOVE BACK v CHARACTERS FROM INPUT
+This command causes the last @i{v} inputed bytes to be removed from 
+the history of the input stream and put back into the input stream of data, 
+so it can be checked for a match again. 
+
+This command can only be used on the right side of the wedge. 
+The maximum number of characters that can be backed is to the beginning of 
+the input stream history. For example:
+
+@example
+'  ' > backi(1) 
+@end example 
+
+does the same as in appropriate example with the @i{back}.
+
+If you use the @i{backi} command, consider the same matters as 
+with @i{back}. The @i{backi} is like but more difficult than @i{back}.
+
+
+@item begin --- BEGINNING OF INPUT FILE OR NESTED BLOCK
+@i{If used on the left side of the wedge}, this command must be by itself, 
+without quotes around it. The replacement 
+which follows the @i{begin} command will be executed before any input 
+data is read. It will not be executed again.
+
+@i{On the right side of the wedge}, this command is used in conjunction with 
+the @i{end} command to separate a command or string from other commands or 
+strings. They are primarily used for nesting @i{if}'s and @i{else}'s. Note 
+that @i{if}'s and @i{else}'s cannot be truly nested without using @i{begin} 
+and @i{end}. See the @i{end} command for an example of this.
+
+The @i{begin} and @i{end} commands must be used to tell the program when a 
+string ends for mathematical or comparison operation and the next string 
+begins for data that is to be output. For example:
+
+@example
+nl > add(count) '2' 'ok' nl  c causes an error
+@end example
+
+This produces an error, because @sc{mse} concatenates all the strings. 
+Another example is with comparing strings.
+
+@example
+'.' > ifeq(fruit) 'apple' 'We have apples.' nl
+        else 'We do not have apples.' nl
+       endif    c this also will not work
+@end example
+
+Even though the contents of storage area fruit is equal to ``apple'' 
+the command is comparing it to ``apple We have apples.''  And the program 
+will output the message ``We do not have apples.'' 
+
+To overcome this 
+problem, use the @i{begin} and @i{end} commands.
+
+@example
+nl > begin
+         add(count) '2'  c this works
+     end    
+     nl
+'.' > ifeq(fruit) 'apple' begin
+          'We have apples.' nl
+      end else 
+          'We do not have apples.' nl
+      endif    
+@end example
+
+The table will generate no errors and will produce the correct output.
+
+
+@item %
+@itemx c --- COMMENT
+This command may occur on a line of its own or on the right 
+side of the wedge (after @i{c} must be @i{some spaces}). It is used to 
+indicate comments which explain to the user the purpose of entries in the 
+table. The rest of a line containing a @i{c} or @i{%} is ignored by the 
+program.
+
+Although the comment lines are ignored by the program, they are the 
+most important lines in a change table for the user. Comments should 
+be added to the beginning of any table to explain the purpose of the 
+table, the form of the expected input text and include the author's 
+name. This information could be of great value later when trying to 
+figure out how the table works, so modifications can be made. Comments 
+should be added throughout the table to describe the purpose of each 
+group, store, switch and define when there are more than one of each. 
+On tables longer than one page these comments should be grouped together 
+either at the beginning or the end of the table so the user can find 
+them easily. 
+
+
+@item clear(name) --- CLEAR SWITCH name
+This command clears (un-sets) a switch which was set by a @i{set} command.
+
+
+@item cont(name) --- CONTENTS OF STORAGE AREA name
+@i{On the search side}, this function causes the contents of the specified 
+storage area to be treated like a match string. For example:
+
+@example
+begin       > store(quark) "abcd" endstore 
+cont(quark) > "wxyz"
+@end example
+
+will function exactly like ``abcd''  > ``wxyz''
+
+@i{On the replacement side}, this function is used in conjunction with 
+the @i{ifeq(name) `string'}, @i{ifneq(name) `string'}, and 
+@i{ifgt(name) `string'} commands. For example:
+
+@example
+'x' > ifeq(proton) cont(quark) out(quark)
+      endif 
+@end example
+
+says ``if the contents of storage area @i{proton} equals the contents of 
+storage area @i{quark}.''
+
+@item decr(name) --- DECREMENT STORE name ONE COUNT
+This command causes the last character of store @i{name} to be decremented 
+by one so that it becomes the previous character on the @sc{ascii} chart. In the 
+following example:
+
+@example
+begin > store(zork) 'x' decr(zork) out(zork) 
+@end example
+
+the @i{x} in @i{store(zork)} is decremented to be a @i{w}. This command can 
+only be used on the right side of the wedge.
+
+If the last character in the store is a ``0,''  then the next-to-last 
+character  in the store will be decremented by one and the ``0''  will be 
+changed to a nine. In the following example:
+
+@example
+begin > store(alpha) 'B2'          
+        decr(alpha) decr(alpha) decr(alpha) 
+        out(alpha)
+@end example
+
+the output is ``A9.''  Had there only been a ``2''  in store(alpha), 
+rather than ``B2,''  then @sc{mse} final result would have been ``9.''
+
+The @i{decr} command is very like to @i{incr} command. It also preserves 
+leading zeros in a store. For example if store @i{alpha} contained 
+``0001,''  it would contain ``0000''  after doing @i{decr(alpha)}. 
+
+It should be noted that @i{decr(x)} is not identical to 
+@i{sub(x) '1'}. The @i{decr(x)} command will preserve leading zeros, the 
+@i{sub(x)} command will not. Also, @i{decr(x)} is allowed on stores which 
+contain non-numeric strings, whereas @i{sub(x)} is not. The @i{decr(x)} 
+ignores the sign of the the number.
+
+
+@item define(name) --- DEFINE SET OF COMMANDS name
+This command allows the user to define a set of commands to be executed by 
+the @i{do(name)} command. Whatever number or name you use for @i{name} when 
+you @i{define} the set for the first time is what you must use when you 
+subsequently do it (see the @i{do(name)} command). The form of the command is:
+
+@example
+define(name) > commands to be executed 
+@end example
+
+As a matter of practice, it 
+is probably best to put all defined commands at the beginning of the 
+table, after the @i{begin} statement, and before the first group. This 
+command occurs only on the @i{search side} of the table. 
+
+@item div(name) `number' --- DIVIDE STORE name BY number
+This command divides the value in the storage area @i{name} by the value 
+specified by @i{number}. The results of the operation are stored in @i{name}, 
+replacing @i{name}'s previous contents. For example, the following will 
+output ``7'' :
+
+@example
+begin > store(results) '21' endstore
+        div(results) '3'      
+        out(results)
+@end example
+
+Any remainder will be discarded. In the following example, 21 
+divided by 5 is equal to 4 with a remainder of 1. @sc{mse} will discard the 
+remainder ``1''  and store a ``4''  in @i{store(results)}:
+
+@example
+begin > store(results) '21' endstore
+        div(results) '5'      
+        out(results)
+@end example
+
+@item do(name) --- DO SET OF COMMANDS name
+This command causes a set of commands which were specified by a 
+@i{define(name)} command to be executed. It can only be used on the right 
+side of the wedge. For example:
+
+@example
+define(vowel) > '***' dup '***'
+'a' > do(vowel) set(proton)
+'e' > do(vowel) set(neutron) 
+'i' > do(vowel) set(nucleus) 
+'o' > do(vowel) set(quark) 
+'u' > do(vowel) set(fusion)
+@end example
+
+The @i{do} command is more flexible than the @i{next} command because do can 
+be used before other commands, and @i{next} cannot. Also, @i{do} commands can 
+be ``nested,''  that is, they can be used inside of @i{define}s. For example:
+
+@example
+define(1) > 'x' do(2) 'x' 
+define(2) > 'y' do(3) 'y' 
+define(3) > 'z' 
+'a'       > 'w' do(1) 'w'
+@end example
+
+In this example, an @i{a}, will be changed to @i{wxyzyxw}. 
+
+In this example, when the command @i{do(1)} is encountered in the table, 
+it causes @sc{mse} to execute the commands following the @i{define(1)} 
+command. Those commands happen to include a @i{do(2)} command which cause 
+@sc{mse} to execute the commands following the @i{define(2)} command. Those 
+instructions happen to include a @i{do(3)} command, which causes @sc{mse} 
+to execute the commands following the @i{define(3)} command. At this point 
+the nesting depth is three. After the commands following the @i{define(3)} 
+command are finished, @sc{mse} will go back and finish the commands 
+(if any) in @i{define(2)}. When finished doing @i{define(2)}, @sc{mse} 
+will go back and finish the commands (if any) in @i{define(1)}. When finished 
+doing @i{define(1)}, @sc{mse} will go back and finish the commands (if any) 
+on the line that originally contained the @i{do(1)} command.
+
+@item dup --- DUPLICATE SEARCH ELEMENT
+This function will duplicate the search element of the change into the 
+output file or storage area. Duplication may be done repeatedly. 
+
+@item else --- ELSE
+The @i{else} command signals the program to take action when the condition 
+examined by the @i{if} statement is not true. It also signals the program 
+to stop taking action when the condition examined by the @i{if} statement is 
+true.
+
+The @i{else} command is the second part of the three parts of the @i{if} 
+statement. The first part is the @i{if} command and the last is the closing 
+@i{endif} command. The @i{else} command is optional.
+
+@example
+'I will ' > dup 
+            if(rain) 'stay inside.'
+            else 'go for a walk.'
+            endif
+@end example
+
+Putting this @sc{mse} table into English would give, ``I will stay inside 
+if it is raining, otherwise I will go for a walk.''
+
+Note how the @i{if}, @i{else}, and @i{endif} commands were aligned. This is 
+not necessary for the table to function, but makes it easier to see what 
+action will take place when the condition is true or false. And shows 
+that there is an @i{endif} command to terminate the @i{if} condition.
+
+If you must check on multiple conditions, you should use the @i{begin} 
+and @i{end} commands for nesting. See the @i{end} command for an example of 
+this. See also @i{if(name)}, @i{ifeq(name)}, @i{ifgt(name)}, @i{ifn(name)}, 
+@i{ifneq(name)}.
+
+@item end --- END OF NESTED BLOCK
+This command indicates the end of a block of nested @i{if}s or @i{else}s. 
+The corresponding block initiator is the @i{begin} command. 
+(Do not confuse the @i{begin} command which initiates a nested block with 
+the @i{begin} command which allows commands to be executed at the beginning 
+of a file.) For example:
+
+@example
+'x' > if(1) begin
+          if(2) 'a'
+          else 'b'   
+      end else begin
+          if(2) 'c'
+          else  'd'
+      end 
+c The preceding entry outputs a if 1 and 2 are on, 
+c   b if 1 is on and 2 off, c if 1 is off and 2 on, 
+c   and d if 1 and 2 are both off
+@end example
+
+@i{End} can also indicate the end of a repeated block of commands. (See 
+the @i{repeat} command.)
+
+@item endfile --- END OF INPUT FILE
+The replacement for this command will be 
+executed after all input data has been read and
+processed. This command must be listed as the only element of a search. 
+For example:
+
+@example
+endfile > out(3)  c store 3 out at very end 
+@end example
+
+This @i{endfile} entry may occur at any point in the table, it does not have 
+to be last. 
+
+@item endif --- END IF
+This command marks the end of a conditional segment of a replacement 
+specification. It applies to all conditionals currently in effect, unless 
+nested with the @i{begin} and @i{end} commands. See also @i{if(name)}, 
+@i{ifeq(name)}, @i{ifgt(name)}, @i{ifn(name)}, @i{ifneq(name)}.
+
+@item endstore --- END STORING
+This command will cause any storing in effect to stop. It reroutes the 
+output from storage to the actual output file. See @i{store(name)}. 
+
+@item excl(name) --- EXCLUDE GROUP name
+This command will exclude the group @i{name} (see the @i{group(name)} 
+command) from the groups that  @sc{mse} is currently using. It can only 
+be used on the right side of the wedge. This table:
+
+@example
+begin > use(dos,mac,unix,windows)
+        use(dos,unix,windows)
+@end example
+
+will have the same effect as this table:
+
+@example
+begin > use(dos,mac,unix,windows)
+        excl(mac)
+@end example
+
+It has the opposite effect of the @i{incl(name)} command. 
+
+@item fol(name) --- MATCH IF FOLLOWED BY ANY CHARACTER IN name
+This function will cause the string to be matched only when @i{followed} by 
+any one of the characters contained in the storage area @i{name}. Note that the 
+character itself is not matched and will not be output by the @i{dup} command. 
+The character is a @i{condition of} the match, not a @i{part of} the match. 
+
+This function should be used only on the search side. It is particularly 
+convenient for matching strings which are required to be at the end of a 
+word. All word-final punctuation, including space, can be stored in a 
+particular storage area and used with the @i{fol(name)} command. Here is an 
+example of the @i{fol} command:
+
+@example
+begin > store(vowel) 'aeiou' endstore
+        store(stop) 'bdg' endstore 
+any(vowel) fol(stop) > dup dup
+@end example
+
+This would double any character found in storage area @i{vowel} (a, e, 
+i, o, or u) that was followed by one of the characters in storage 
+area @i{stop} (b, d, or g).
+
+More than one @i{fol(name)} command may be used in succession. For example, 
+the command @i{`test' fol(1,2,3)} will look for @i{test}, followed by 
+something in storage area @i{1}, followed by something in storage area 
+@i{2}, followed by something in storage area @i{3}.
+
+Compare this with the commands @i{wd(name)}, @i{prec(name)}, and @i{any(name)}. 
+
+@item fwd(v) --- MOVE FORWARD v CHARACTERS
+This command causes the next @i{v} characters that would be input to be passed 
+directly to output or storage, without being considered for matching in the 
+table. This command may only be used on the right side of the wedge. 
+
+@item group(name) --- GROUP OF CHANGES name
+This command identifies the following changes as belonging to the group 
+@i{name}. Which group of commands is currently active is controlled by the 
+@i{use(name)}, @i{incl(name)} and @i{excl(name)} commands. If a table 
+consists of only one group, the @i{group} command is @i{not} necessary. 
+Whatever name you choose for @i{name} in the @i{group(name)} command
+is the name you must specify when you subsequently make the group active 
+with the @i{use(name)} command.
+
+This command is put at the beginning of a line by itself and is @i{not 
+followed by a wedge}. In a sense, it is not a command, but a label at the 
+beginning of each set of change entries. 
+
+Groups are particularly useful when certain changes are wanted in one 
+context but not in another, eg., changing the orthography of one language 
+inside a bilingual dictionary file.
+
+If the change table is longer than two pages, then numbers should be 
+used for each group name instead of string names. This will make it 
+easier for the user to follow the flow of the table when the program 
+changes groups. The program will always start with the group that has 
+a name of ``1''  or the first group in the table, if there is no 
+@i{group(1)}. However, a @i{use} command in the @i{begin} statement can 
+initialize the table to start with a specific group or groups active.
+
+If a number followed by letters is used as the name of a group, that 
+number is associated with that group name when the table is loaded. 
+Should that name begin with the numeral 1, that group will function 
+as though it were group(1) and will become the first active group in 
+the table unless otherwise designated. For example:
+
+@example
+group(main) 
+'\w' > dup use(1st) 
+'\d' > dup use(1st)
+
+group(1st) 
+'a' > 'V' 
+'b' > 'C' 
+'\' > dup back(1) use(main)
+@end example
+
+@sc{mse} will begin processing text using the set of changes found in 
+@i{group(1st)} not in @i{group(main)} as you might expect. This feature of 
+@sc{mse} could cause strange looking output, until the table gets in synch 
+with the data coming into it.
+
+@item if(name) --- IF SWITCH name IS SET
+The @i{if} command checks the status of switch @i{(name)} and executes the 
+following commands based on the condition of the switch. The @i{if} command 
+can only be used on the right side of the wedge.
+
+If the switch is set, then following replacement commands are executed. 
+(See @i{set(name)} and @i{clear(name)} commands). If the switch is clear, 
+then the following replacement commands are ignored.
+
+There are three parts to an @i{if} command, and the @i{if(name)} is the 
+first part. The last part is the @i{endif} command. The second part 
+(optional) is the @i{else} command.
+
+The @i{if} command may be nested with other @i{if} commands (checking for 
+multiple conditions) by using the @i{begin} and @i{end} commands. (See 
+@i{end} command for an example of nested @i{if} commands.) See also 
+@i{ifn(name)}.
+
+@item ifeq(name) `string' --- IF STORE name EQUALS string
+This command executes the following commands if the content of store 
+@i{name} exactly matches the string. It can only be used on the right side 
+of the wedge. The sequence @i{'string'} is any combination of literal 
+strings and @sc{ascii} characters (such as d8 for backspace). The 
+@i{cont(name)} command can be used instead of a string to compare the 
+contents of store @i{name} to the contents of another storage area. (See the 
+@i{cont(name)} command.) For example:
+
+@example
+'x' > ifeq(orange) 'apple' set(ripe)
+      endif
+@end example
+
+will have exactly the same results as:
+
+@example
+'x' > store(fruit) 'apple' endstore
+      ifeq(orange) cont(fruit) set(ripe)
+      endif
+@end example
+
+The string is terminated by the following command. 
+
+The conditional execution is terminated by an @i{endif} or @i{else} command, 
+or by the end of the table entry. @sc{mse} does a byte-for-byte @sc{ascii} 
+comparison.
+
+See also the discussion under the @i{if(name)} command. 
+
+@item ifgt(name) `string' --- IF name IS GREATER THAN string
+This command is very similar to the @i{ifeq} command, in that it compares 
+the contents of store name to the following string or to the contents of 
+another storage area. It can only be used on the right side of the wedge. 
+If the contents of @i{name} are ``greater than'' the @i{string}, the 
+following commands will be executed; if not, they will be skipped.
+
+When comparing characters, ``greater than''  is strictly according to 
+@sc{ascii} codes. See the @sc{ascii} table at the end of this manual for details. 
+Thus, @i{abc} is greater than @i{b} (@i{abc} has length greater than @i{b}) 
+and @i{a} is greater than @i{B} or @i{1}. 
+
+@item ifn(name) --- IF SWITCH name IS NOT SET
+This command is completely parallel to @i{if} except that it executes the 
+commands and replacements following it if the switch is @i{not} set (is clear), 
+and doesn't execute it if the switch @i{is} set.
+
+@item ifneq(name) `string' --- IF name IS NOT EQUAL TO string
+This command is like @i{ifeq}, except that the following commands and 
+replacements are executed if @i{name} is @i{not} equal to the string.
+
+@item incl(name) --- INCLUDE GROUP name
+This command will include group @i{name} (see the @i{group(name)} command) 
+with the group(s) that  @sc{mse} is currently using. It can only be used on 
+the right side of the wedge. This table:
+
+@example
+begin > use(2,5,8,4) 
+@end example
+
+will have the same effect as this table:
+
+@example
+begin > use(2,5,8) incl(4)
+@end example
+
+This command has the opposite effect of @i{excl(name)}. 
+
+@item incr(name) --- INCREMENT STORE name ONE COUNT
+This command causes the last character of store @i{name} to be incremented 
+by one so that it becomes the next character on the @sc{ascii} chart. In the 
+following example:
+
+@example
+begin > store(zork) 'x' incr(zork) out(zork) 
+@end example
+
+the @i{x} in @i{store(zork)} is incremented to be a @i{y}. This command can only 
+be used on the right side of the wedge.
+
+If the last character in the store is a ``9,''  then the next-to-last 
+character  in the store will be incremented by one and the ``9''  will be 
+changed to a zero. In the following example:
+
+@example
+begin > store(alpha) 'A7'          
+        incr(alpha) incr(alpha) incr(alpha) 
+        out(alpha)
+@end example
+
+the output is ``B0.''  Had there only been a ``7''  in store(alpha), 
+rather than ``A7,''  then @sc{mse} final result would have been ``0.''
+
+A common use of @i{incr(name)} is to count the number of occurrences of 
+a certain character or string in a file:
+
+@example
+'x' > dup incr(total)     c count every x 
+endfile > out(total)      c output count
+@end example
+
+The above table will count every occurrence of @i{x}. The @i{incr} command 
+preserves leading zeros in a store. For example if store @i{x} contained 
+``0001,''  it would contain ``0002''  after doing @i{incr(x)}. 
+
+It should be noted that @i{incr(x)} is not absolutely identical to 
+@i{add(x) '1'}. The @i{incr(x)} command will preserve leading zeros, the 
+@i{add(x)} command will not. Also, @i{incr(x)} is allowed on stores which 
+contain non-numeric strings, whereas @i{add(x)} is not. The @i{incr(x)} 
+ignores the sign of the the number.
+
+@item mod(name) `number' --- REMAINDER OF STORE name DIVIDED BY number
+This command divides the value in the specified storage area by the 
+value of number. The remainder from the division operation is stored 
+in @i{name}, replacing name's previous contents. For example, the 
+following will output ``7'' :
+
+@example
+begin > store(test) '40' endstore
+        mod(test) '11'
+        out(test)
+@end example
+
+Since 40 divided by 11 is 3 with a remainder of 7, @sc{mse} discards the 
+3 and stores the 7 in storage area @i{test}. If there is no remainder, 
+@sc{mse} will store a 0 as the remainder. This command can only be used on 
+the right side of the wedge.
+
+@item mul(name) `number' --- MULTIPLY STORE name BY number
+This command multiplies the value in the specified storage area by the 
+value in @i{number}. The results of the operation are stored in @i{name}, 
+replacing @i{name}'s previous contents. For example, the following will 
+output ``48'':
+
+@example
+begin > store(1) '4' endstore
+        mul(1) '12'
+        out(1)
+@end example
+
+This command can only be used on the right side of the wedge. 
+
+@item (name) --- NAME OF STORAGE, SWITCH, GROUP, OR DEFINE
+Any combination of printable characters (including numbers) can be used in 
+the name to designate specific switches, groups, defines or storage areas. 
+The only exceptions are a space, a right round bracket, and a comma. A comma 
+is used as a separator for multiple designators. The naming of each is 
+totally independent of the naming of any of the others. (eg. nothing happens 
+to switch @i{examp} when something is stored in area @i{examp}). 
+
+Any command which takes a parenthesized string argument name 
+may take more than one string, separated by commas (i,j,k). This has 
+the effect of repeating the command. For example, to clear three storage 
+areas, @i{store(1) store(2) store(3) endstore} is the same as @i{store(1,2,3) 
+endstore}. The only exception is the @i{use} command, in which @i{use(1,2)} 
+makes both @i{group(1)} and @i{group(2)} active, while @i{use(1) use(2)} 
+makes only @i{group(2)} active.
+
+@item next --- USE REPLACEMENT IN NEXT ENTRY
+This command executes the replacement side of the next search entry. 
+This is useful when a number of similar match-strings need the same change. 
+It saves table space and makes the table easier to read. For example:
+
+@example
+'a' > next   c change all vowels to V
+'e' > next   c  and add one to vowel count 
+'i' > next 
+'o' > next 
+'u' > 'V' incr(vowel)
+@end example
+
+Commands and replacement strings may precede @i{next} on the replacement 
+side, but anything following the @i{next} command on that replacement 
+is ignored.
+
+See also the @i{define} and @i{do} commands. 
+
+@item nl --- NEW LINE
+If used on the left side of the wedge, @emph{nl} matches an @key{Enter} keyed 
+in the input. If used on the right side of the wedge, it has the effect 
+of putting an <ENTER> into the output. 
+Note: It's difficult to put a @sc{ascii} code of <ENTER> between quotes. 
+The only simple way to indicate an <ENTER> is to use nl.
+
+
+@item not(name) --- LOGICAL NEGATE SWITCH name
+This command logical negates a switch or flag which you can check 
+for conditional execution of table entries. It can only 
+be used on the right side of the wedge. See also @i{clear} and @i{set} 
+commands. 
+
+
+@item `' --- NULL MATCH or REPLACEMENT
+
+If used on the left side of the wedge, the null match will match when 
+nothing else will. Note that the following restriction must be observed 
+to avoid putting the table into a loop:
+
+When '@{@}' is used on the left side of the wedge, you should put either 
+a @i{fwd(v)} or an @i{omit(v)} command or a @i{use(name)} command on the 
+right side of the wedge so progress can be made through the input (see the 
+@i{fwd(v)}, @i{omit(v)}, and @i{use(name)} commands). Since '@{@}' matches when 
+the next character in the input file doesn't match anything, that character
+must be removed to allow the possibility of matching the next character. 
+The commands @i{fwd(v)} and @i{omit(v)} accomplish this. The @i{use(name)} 
+command sends the program to a different set of matches, where the character 
+might match. For example:
+
+@example
+'a'    > 'a' 
+''     > fwd(1) '-'  c this puts a hyphen after
+                     c any char other than 'a'
+@end example
+
+The '@{@}' is meaningless when used on the right side of the wedge. It 
+is sometimes used, however, to visually signify that nothing is being 
+output. It is not necessary, but is helpful to clarify what is happening. 
+(Its absence does not save any table space.) Thus, the following:
+
+@example
+"a"    > ''    c get rid of every a 
+"b"    > "c"   c change every b to c
+@end example
+
+is the same as:
+
+@example
+"a"    >       c get rid of every a 
+"b"    > "c"   c change b to c
+@end example
+
+@item omit(v) --- OMIT v CHARACTERS FROM INPUT
+This command causes the next @i{v} characters that would be input, to be 
+discarded. These characters will not be passed through the table to 
+be matched nor put into output or storage. This command can only be 
+used on the right side of the wedge. 
+
+@item out(name) --- OUTPUT STORAGE AREA name
+This command stops any storage in progress and sends the contents of 
+storage area @i{name} to the output. The contents of @i{store(name)} remain 
+unchanged and may be output more than once. Unless there is another 
+@i{store} command, all results will then go to the actual output. This 
+command can only be used on the right side of the wedge.
+
+The @i{out} command closes any storage area that may be open, and output 
+continues to be routed to the actual output after the command is executed. 
+
+@item outs(name) --- OUTPUT STORE name EVEN WHILE STORING
+This command is the same as the @i{out} command, except that it continues 
+any storing already in progress. It can only be used on the right side of 
+the wedge. This allows transfer of material between storage areas. For 
+example, the following copies the contents of storage area @i{1} to storage 
+area @i{2}, and storage area @i{2} remains open after the @i{outs(1)} command 
+is executed:
+
+@example
+store(2) outs(1) 
+@end example
+
+Note that the content of storage area @i{1} does not change. 
+
+
+@item prec(name) --- MATCH IF PRECEDED BY ANY CHARACTER IN STORE name
+This function will cause the string to be matched only when that string 
+is @i{preceded} by anyone of the characters contained in the specified 
+storage area. This command can only be used on the search side. Note 
+that the character itself is not matched and will not be output by 
+the @i{dup} command. The character is a @i{condition of} the match, not a 
+@i{part of} the match.
+
+This function is particularly convenient for matching strings which 
+are required to be at the beginning of a word; any character that may 
+appear before a word such as a space, can be stored in a particular 
+storage area and used with @i{prec(name)} command. An example of the 
+@i{prec} command follows:
+
+@example
+begin > store(begin-word) ' ' nl '<"([@{' endstore
+'c' prec(begin-word) > 'ch'
+@end example
+
+This would change any @i{c} that is preceded by a word-break character 
+to the character sequence @i{ch}.
+
+More than one @i{prec(name)} command can be used in succession. For example, 
+@i{'test' prec(1,2,3)} will look for @i{test}, preceded by something in 
+storage area @i{3}, preceded by something in storage area @i{2}, preceded 
+by something in storage area @i{1}.
+
+Compare this with the commands @i{wd(name)}, @i{fol(name)}, @i{preci(name)}, 
+and @i{any(name)}.
+
+@item preci(name) --- MATCH IF PRECEDED BY ANY CHARACTER IN INPUT name
+This function will cause the string to be matched only when that string 
+is @i{preceded} in the input stream history by anyone of the characters 
+contained in the specified storage area. It is very like to @i{prec}, but 
+in several cases is more useful. For example:
+
+@example
+begin > store(delims) ' ' nl '<"([@{@}])' endstore
+'i' preci(delims) > '[I]'
+@end example
+
+This would change any @i{i} that is preceded by a word-break character 
+to the character sequence @i{[I]}. In the case of using @i{prec} in this 
+example not only the first letter @i{i} in a word will changed but all the
+consequent letters @i{i} too.
+
+
+@item prevsym(v) --- MATCH IF v-th PREVIOUS SYMBOL IS THE SAME
+This command can only be used on the left side of the wedge. For example:
+
+@example
+begin > store(a) '123' endstore
+any(a) '5' prevsym(2) > '*'  
+    c changes '151', '252', '353' to '*'
+@end example
+
+Number @i{v} is the offset from the position of the current @i{prevsym} 
+(it's 0) to the left in the matched string.
+
+
+@item read --- READ FROM KEYBOARD
+This command reads a line from the keyboard into the current store if 
+storing, or directly into output. It can only be used on the right side 
+of the wedge. @sc{mse} stops reading characters from the keyboard when the 
+@key{Enter} key is pressed. The @key{Enter} is simply a signal to the 
+@emph{read} command to stop reading characters from the keyboard; the 
+<ENTER> does not actually go to the storage area or output.
+
+Prior to issuing a @i{read} command, it would be advisable to use the 
+@i{write} command to write a message on the screen so that the person at 
+the keyboard would realize that the computer has paused and is waiting for 
+input from the keyboard.
+
+@item repeat --- REPEAT FROM begin
+This command goes back to the nearest @i{begin}. This command can only be 
+used on the right side of the wedge. For example:
+
+@example
+   c This table fills short lines with the letter x
+   c  until all lines have sixty characters 
+begin > store(char) ' abcdefghijklmnopqrstuvwxyz,.?!'
+        store(count) '0' endstore
+
+any(char) > dup add(count)'1'
+nl > ifgt(count) '59' begin
+         '**** ERROR count 60 or greater ***' nl
+     end else begin
+         add(count)'1'     c Increment count
+         'x'               c and output an x
+          ifneq(count) '60' c If count not sixty,
+              repeat        c   go back to begin
+          endif 
+          store(count) '0' endstore
+          nl     c restore count and output newline
+     end endif
+@end example
+
+Be careful when using the @i{repeat} command. In this example we checked 
+first to make sure that the count was less than 60 before starting the 
+@i{repeat} command. If, for some reason the count was 60 or greater when 
+we encountered a newline, the program would hang up in an 
+endless loop. Always check whatever is being used to control the @i{repeat} 
+command to make sure that it is set properly before beginning the 
+@i{repeat} loop.
+
+It may be easier to run @sc{mse} twice (pass the data through two different 
+change tables) than make a complex table to do everything in just one 
+pass.
+
+@item set(name) --- SET SWITCH name
+This command sets a switch or flag which you can check (using 
+@i{if} commands) for conditional execution of table entries. It can only 
+be used on the right side of the wedge. Whatever number or name you use 
+when you @i{set} it for the first time is what you must use when you 
+subsequently @i{clear} or test the flag.
+
+A switch can be ``turned off'' by using the @i{clear} command. All switches 
+are initially clear (not set).
+
+
+@item store(name) --- STORE IN STORAGE AREA name
+This command reroutes the output to an internal storage area. It can only 
+be used on the right side of the wedge. Whatever you call the storage area 
+in the @i{store(name)} command is what you must use when you subsequently 
+output its contents (see the @i{append}, @i{out}, and @i{outs} command as 
+well as description of @i{name}).
+
+Any data previously stored in the specified area is discarded when 
+a new request to store is given, and any storage being done in another 
+area is stopped.
+
+Storage areas can only be cleared by a @i{store} command followed 
+immediately by an @i{endstore}, @i{out}, or another @i{store} command. Note 
+that if multiple stores are requested at once, the effect will be to erase 
+and close each until the last, which will be cleared, but remain open to be 
+stored into. The following three lines are equivalent to each other:
+
+@example
+'x' > store(1,2,3)
+'x' > store(1) store(2) store(3)
+'x' > store(1) endstore store(2) endstore store(3)
+@end example
+
+
+@item sub(name) `number' --- SUBTRACT number FROM STORE name
+This command subtracts the value specified by @i{number} from the value in 
+the storage area @i{name}. It can only be used on the right side of the 
+wedge. The @i{difference} is stored in @i{name}, replacing @i{name}'s 
+previous contents. For example, the following will output ``3'':
+
+@example
+begin > store(value) '17' endstore
+        sub(value) '14'
+        out(value)
+@end example
+
+@item symdup(v) --- DUPLICATE v-th SYMBOL IN SEARCH ELEMENT
+This command can only be used on the right side of the wedge. For example:
+
+@example
+'abcd' > symdup(0) symdup(2) 
+    c changes 'abcd' to 'ac'
+@end example
+
+Number @i{v} is the position in the current search element
+(counted from 0).
+
+@item use(name) --- USE CHANGES IN GROUP name
+This command specifies which groups of changes are currently available to be 
+matched (see the @i{group(name)} command). Any previous @i{use(name)} 
+command is cancelled. This command can only be used on the right side of the 
+wedge. If @i{use(x)} is specified, then the changes in @i{group(y)} are 
+ignored. For example:
+
+@example
+group(def) 
+'\w' > dup use(word)   c change a to aa following 
+'a'  > 'aa'            c  a \d but not following 
+group(word)            c a \w marker 
+'\d' > dup use(def)
+@end example
+
+Several groups can be made available for searching at the same time. 
+For example, @i{use(1,6,8,4)} causes groups @i{1}, @i{6}, @i{8} and @i{4} to 
+be searched. The @i{use(name)} commands do not take effect 
+until @i{the end of the entry} in which they were specified.
+
+@item wd(name) --- MATCH ONLY IF WORD
+This command causes a string to be considered matched only if it is both 
+preceded and followed by any character contained in storage area @i{name}. 
+Note that the preceding and following characters are @i{not} considered part 
+of the match and would not be output by a @i{dup} command. For example, 
+the following table:
+
+@example
+begin  > store(punct) nl ' .,"()' endstore 
+'and' wd(punct) > 'also'
+@end example
+
+will change any of the following:
+
+@example
+and   and.  and,  and''  and(  and)  and<ENTER>  
+ and  .and  ,and  ``and  (and  )and  <ENTER>and
+@end example
+
+This command is used only on the search side of the table. @code{wd(n)} 
+means the same as the sequence of command @code{prec(n) fol(n)}.
+
+Note: When storing the word boundary punctuation, do not include any 
+diacritics. Also keep in mind that there is a small gain in speed if 
+the most frequently used characters are listed first. 
+
+@item write `string' --- WRITE string TO SCREEN
+This command writes on the screen the contents of the @i{string}. A 
+@i{string} is any combination of literal strings, @i{nl} commands, and @sc{ascii} 
+characters (such as 10 for <BACKSPACE>). This command can only be used on the 
+right side of the wedge. The string is terminated by the following command or 
+next search entry. It may contain @i{nl}s and multiple lines. For example:
+
+@example
+'cat' > write nl 'cat found' nl 
+'bird' > write nl 'feathered friend found' nl dup
+@end example
+
+When @i{cat} is matched the program writes the message @i{cat found} on 
+the screen. The screen message is terminated by the next search entry. 
+When @i{bird} is matched the program writes the message @i{feathered friend 
+found} on the screen. The screen message is terminated by the @i{dup} 
+command and @i{bird} is written to the output, but not to the screen.
+
+@item wrstore(name) --- WRITE STORAGE AREA name TO SCREEN
+This command writes on the screen the contents of store @i{name}. It can 
+only be used on the right side of the wedge. Combining the example under 
+@i{write} with the example under @i{incr(name)}, if a count of every x was 
+kept in storage area count, the total could be printed to the screen as 
+follows:
+
+@example
+endfile > write 'There were '
+    wrstore(count) write " occurrences of x" nl
+@end example
+@end table
+
+@node I/O Options
+@section I/O Options
+
+When you type @sc{mse} at the console prompt, @sc{mse} will wait for the 
+input data (the input will finished after @kbd{@key{Ctrl}+d}). For example:
+
+@example
+$ mse
+abcd
+dcba
+@kbd{@key{Ctrl}+d}
+@end example
+
+Cause lines @i{abcd} and @i{dcba} appearance in the output.
+
+
+@node Command Line Options
+@section Command Line Options
+
+When you type @sc{mse} at the console prompt, @sc{mse} uses default values
+for change table, input, output, and log streams.
+You can set your values when you type @sc{mse} by command line options. 
+For example:
+
+@example
+-----------------------------------------------------------
+$ mse -t - @key{Enter}
+'a' > 'b' @key{Enter}
+'b' > 'c' @key{Enter}
+@kbd{@key{Ctrl}+d} abcd @key{Enter}
+dcba @key{Enter}
+@kbd{@key{Ctrl}+d} bccd
+dccb
+$ _
+-----------------------------------------------------------
+@end example
+
+In this example lines @i{bccd} and @i{dccb} appeared in the output. If 
+both the change table and data input stream go from standard input device 
+the change table is entered first. Another example:
+
+@example
+-----------------------------------------------------------
+$ mse -t changes.mse -o result.txt data.txt @key{Enter}
+$ _
+-----------------------------------------------------------
+@end example
+
+The -t indicates that the table name will follow and -o indicates that 
+the output file name will follow. The input files names don't get preceded 
+by anything. Options may be typed in any order. It's possible to use several 
+input data sources (any combination of the files and standard input). There 
+will only be one output file, however. 
+
+In fact, you don't even have to remember this. If you type 
+@code{mse -h} at the console prompt, @sc{mse} will display a list of which 
+``-'' goes with which file name.
+
+@subsubheading Summary of Command Line Options
+
+@table @code
+@item -t
+Change Table name (default is empty table)
+
+@item -o
+Output file or device (default is standard output device)
+
+@item -l
+Log file name (default is no logging)
+
+@item -
+After @code{-t} option or in the place of the input filename means standard
+input device, after @code{-o} or @code{-l} options means standard output 
+device
+
+@item -V
+Invoking @sc{mse} with this option prints its version
+
+@item --help
+@itemx -h
+Invoking @sc{mse} with any of these options prints command line options 
+summary 
+@end table
+
+@node Advanced Features 
+@chapter Advanced Features 
+
+@node Storage Commands
+@section Storage Commands
+
+There are five commands directly connected with the storage feature of 
+the @sc{mse} program:
+
+@example
+store(name) 
+append(name) 
+endstore 
+out(name) 
+outs(name)
+@end example
+
+Some secondary commands which use storage areas, but which are not 
+described in this section, are:
+
+@example
+  add(name)    any(name)    cont(name)
+  decr(name)   div(name)    excl(name)
+  fol(name)    ifeq(name)   ifgt(name)
+  ifneq(name)  incl(name)   incr(name)
+  mul(name)    preci(name)  prec(name)
+  sub(name)    wd(name)     wrstore(name)
+@end example
+
+More information on these can be found in @ref{Command Description}. 
+The expression @i{(name)} represents any logical name you choose. 
+A logical name can consist of alphabetic characters or numbers, and 
+cannot include spaces, commas or a right parenthesis. The names can be 
+any length. These rules also apply to the names for groups, switches, and 
+defines. 
+
+@subsubheading What @i{store(name)} Does
+
+When the @i{store(name)} command is encountered, the storage area assigned 
+to that name is first cleaned out --- any data stored there previous to 
+encountering the @i{store(name)} is discarded, without warning. Before using 
+the @i{store(name)} command, be sure you do not need anything that may be in 
+the storage area. Now rather than send data to the normal output,
+the data is sent to the temporary store area. Data will continue to 
+be stored in this area until the program encounters another command 
+that affects storage (@i{append}, @i{endstore}, @i{out}, or @i{outs}).
+
+If storage had been requested to one area @i{(name1)}, but it is now 
+requested to a different area @i{(name2)}, the output is diverted to the 
+second area and no longer goes into the first. Only one storage area at a 
+time accepts data.
+
+@subsubheading What @i{append(name)} Does
+
+The @i{append(name)} command is quite similar to the @i{store(name)} command, 
+except the @i{store(name)} command causes the previous contents of area 
+@i{(name)} to be discarded. The @i{append(name)} command retains the 
+previous contents and inserts the new data into the storage area following 
+any data that already was in that storage area.
+
+@subsubheading What @i{endstore} Does 
+
+When an @i{endstore} command is encountered, any storage that was going on 
+is stopped and output is directed to the normal output, as it does when 
+storage is not requested. Data that is currently in storage will remain 
+there until the program encounters a command (@i{store}, @i{append}, @i{out}, 
+or @i{outs}) naming that area. Note that no name is required for the endstore 
+command.
+
+By the way, if you want to deliberately clear out the contents of a 
+storage area, the combination of commands @i{store(name) endstore} will 
+clear it out without affecting output at all.
+
+@subsubheading What @i{out(name)} Does 
+
+When @i{out(name)} is encountered, two things happen. First, if storage is 
+being done, it is stopped as if an endstore had been encountered. Second, 
+the contents of storage area @i{(name)} are sent to the output file. Note 
+that no matches are performed; the contents of the storage area do not pass 
+through the change table. Also note that storage area @i{(name)} is not 
+cleared out; it still contains what it contained before the @i{out(name)} 
+was encountered. Storage area @i{(name)} may be output any number of times. 
+If there is nothing in the storage area, nothing is output.
+
+@subsubheading What @i{outs(name)} Does 
+
+The @i{outs(name)} command is very similar to the @i{out(name)} command 
+except the @i{outs(name)} command does not stop storing. This provides a way 
+to transfer data from one storage area to another. This applies whether 
+storing is being done with the @i{store(name)} command or with the 
+@i{append(name)} command. For example, to copy the contents of 
+@i{store(first)} to @i{store(second)}, use the command @i{store(second) 
+outs(first) endstore}.
+
+To put the contents of storage areas @i{first}, @i{second}, and @i{third} 
+all together into area four:
+
+@example
+store(four) outs(first) outs(second) outs(third) endstore 
+@end example
+
+or
+
+@example
+store(four) outs(first,second,third) endstore
+@end example
+
+@subsubheading An Example of Storage
+
+The storage feature has a number of uses. Frequently 
+it is used when the user wants the output in a different order than 
+the input order. The following example illustrates the use of storage 
+in a simple dictionary reversal.
+
+Let's suppose that you had a huge text file that was a bilingual dictionary 
+that a Spanish speaker would use to find the meaning of English words. 
+A text file for such a dictionary might be keyed in with each line 
+preceded by a SIL Standard Format marker as follows:
+
+@example
+ \w word in English  
+ \p part of speech in Spanish  
+ \d definition in Spanish  
+ \i illustrative sentence in English  
+ \t translation of illustrative sentence in Spanish
+@end example
+
+Let's suppose now that you wanted a dictionary that would go the other 
+way, to allow an English speaker to find the meaning of Spanish words. 
+We could use the first dictionary as a basis for our new dictionary, 
+creating a @sc{mse} table to rearrange things for us.
+
+@example
+Sample of Input (before):      Desired Output (after):  
+  \w cat                         \w gato  
+  \p n                           \p n  
+  \d gato                        \d cat 
+  \i The cat is black.           \i El gato es negro. 
+  \t El gato es negro.           \t The cat is black.
+@end example
+
+Note that the word and definition ``changed places,''  as did the 
+illustrative sentence and its translation. (For the moment, we will not deal 
+with the fact that different abbreviations would probably be used for the 
+part of speech --- we are interested in the process of the reversal.) 
+The following table is what is needed for a reversal.
+ 
+@example
+----------------------------------------------------------- 
+  "\w " > out(def,part,word,trans,ill)                          
+                 c output reversed entry
+          store(trans,ill,def,part,word) 
+                 c clear storage areas               
+                 c   and store entry word
+          "\d "  c mark word as definition
+
+  "\p " > store(part) "\p "   c keep as part of speech
+  "\d " > store(def)  "\w "   c mark def. as entry word
+  "\i " > store(ill)  "\t "   c mark illus. as
+                              c    translation 
+  "\t " > store(trans) "\i "  c translation as
+                              c    illustration.
+
+  endfile > out(def,part,word,trans,ill)
+                              c output last entry 
+-----------------------------------------------------------
+@end example
+
+What does this say? It is easier to understand if we look at it in 
+pieces. 
+
+Conceptually, the first thing to do is to store everything 
+that comes in, in different storage areas. If you look closely, you 
+will see the following in the above table, among other things.
+
+@example
+"\w " > store(word)     c store entry word 
+"\p " > store(part)     c store part of speech 
+"\d " > store(def)      c store definition 
+"\i " > store(ill)      c store illustrative sentence 
+"\t " > store(trans)    c store translation
+@end example
+
+The data comes in and the @i{\w} is found. Storage area@i{ (word)} is 
+requested. Data that follows passes through the table unchanged. However, it 
+does not go to the output file; it is sent into storage area @i{(word)}. 
+When the @i{\p} comes through, it matches and storage area @i{(part)} 
+is requested. Data that follows is sent into storage area @i{(part)}, and so 
+forth.
+
+Soon a @i{\w} is found again, and that is where some of the other commands 
+in the table really take effect. Let's look more closely at the 
+@i{\w} entry, as it really is in the table.
+
+@example
+"\w " > out(def,part,word,trans,ill)
+                        c output reversed entry
+         store(trans,ill,def,part,word)
+                        c clear storage areas
+                        c   and store entry word
+         "\d "          c mark word as definition
+@end example
+
+The first line of it:
+
+@example
+"\w " > out(def,part,word,trans,ill)
+                        c output reversed entry
+@end example
+
+says to stop any storing that may be being done, and to output the 
+data in the storage areas in the order: @i{def}, @i{part}, @i{word}, 
+@i{trans}, @i{ill}. As you may recall, the definition was stored in 
+area @i{(def)}. That is output first. The part of speech is in storage 
+area @i{(part)} and it is output second. The main entry word is in storage 
+area @i{(word)} and it is output third. And so forth. Comparing this to 
+the desired output, it is indeed what is wanted. The next line:
+
+@example
+store(trans,ill,def,part,word)  c clear storage areas
+                                c and store entry word
+@end example
+
+is a bit more obscure. It is perhaps easier if we look at an equivalent 
+set of commands:
+
+@example
+store(trans) store(ill) store(def) store(part) store(word) 
+@end example
+
+This has exactly the same effect as @i{store(trans,ill,def,part,word)}. 
+Requesting storage into an area causes its current contents to be 
+discarded. If another storage area is immediately requested, nothing 
+is stored in the first. Thus, the command @i{store(trans)} says, ``stop 
+storing any place else, erase anything that might be in storage area 
+@i{(trans)} and begin storing something new there.''  This is immediately 
+followed by @i{store(ill)} which says, ``stop storing any place else, 
+erase anything that might be in storage area @i{(ill)} and begin 
+storing something new there.''  What happened? The effect 
+was to erase anything in storage area @i{(trans)} without putting 
+anything new there. Similarly, since the command @i{store(def)} follows 
+immediately, storage area @i{(ill)} has been erased and nothing new put 
+there. This continues until at last the @i{store(word)} command is 
+encountered. By the way, we could have said:
+
+@example
+store(trans) endstore 
+store(ill)   endstore 
+store(def)   endstore 
+store(part)  endstore 
+store(word)  endstore 
+store(word)
+@end example
+
+This would have had the same effect as @i{store(trans,ill,def,part,word)}.
+ 
+Since no other store or endstore command follows the @i{store(word)} command, 
+something actually can be stored in area @i{(word)}. And, in fact, that 
+happens immediately. The line:
+
+@example
+"\d "             c mark word as definition 
+@end example
+
+will be stored in area @i{(word)}.
+
+In general, this is what is happening:
+
+@example
+"\w " > "\d " 
+"\p " > "\p " 
+"\d " > "\w " 
+"\i " > "\t " 
+"\t " > "\i "
+@end example
+
+If you compare the Sample of Input with the Desired Output, you will 
+notice that the markers change. What was marked as the main entry word 
+is now marked as the definition, and vice versa. This type of changing 
+is one of the most basic features of the MultiStream Editor program. 
+A sequence of characters is matched and is replaced by another sequence 
+of characters. Putting the marker changes together with the storage, 
+the table has:
+
+@example
+"\w " > store(word)  "\d "    c mark word as definition 
+"\p " > store(part)  "\p "    c keep as part of speech 
+"\d " > store(def)   "\w "    c mark def. as entry word 
+"\i " > store(ill)   "\t "    c mark illus. as
+                              c    translation 
+"\t " > store(trans) "\i "    c mark translation as 
+                              c    illustration
+@end example
+
+The entry word ``cat''  goes into storage area word. The new marker 
+``\d''  should go there too --- before the word ``cat''  does --- just as 
+the old marker ``\w''  was before the word ``cat.''  Thus, the new marker 
+should be the first thing stored in the storage area. In order for @i{\d} 
+to be stored, it must follow the store command, not precede it. Because the 
+@i{\d} follows the @i{store(word)}, it is stored immediately in area word. 
+Then the end of the command is encountered. The rest of the data between 
+the ``\w''  and the ``\p cat'' is not changed because it matches nothing 
+in the table. It would have gone to the output file, but because storage 
+has been requested, it goes into storage area word --- where the @i{\d} 
+already is. When the ``\p''  is encountered, the change table 
+calls for storage to be switched to area part. Then the ``\p''  is 
+``changed''  to ``\p,''  and sent to storage area part. The same process 
+is followed for the other parts of the data.
+
+How can we tell when we have stored all there is of a given entry and 
+that we are starting a new word in the dictionary? --- when we get to 
+the beginning of the next entry. That is why the out command is at 
+the beginning of the ``\w''  entry. Another way to know that we have 
+just finished storing a given entry is when we reach the end of the 
+input file. In the following part of the table, the @i{endfile} on the 
+left of the wedge means ``Do this when we get to the end of the input 
+stream:''
+
+@example
+endfile > out(def,part,word,trans,ill)   c output last
+                                         c   entry 
+@end example
+
+The command @emph{endfile} means: at the very end of the data, when 
+everything has been looked at, but before the program stops, to output 
+the last reversed entry, just like the ``\w''  entry in the table 
+does --- but there won't be another ``\w'' coming. That is the only way 
+to tell the program that it is done. The @emph{endfile} on the left of the 
+wedge catches the end of file mark in the data. The @i{endfile} on the 
+right side tells the program to send an end of file mark to the output file, 
+close the output file, stop processing and return to the console prompt. 
+
+There are a few other comments that need to be made about the table. 
+For convenience it is reproduced below:
+
+@example
+"\w " > out(def,part,word,trans,ill) 
+                          c output reversed entry 
+        store(trans,ill,def,part,word) 
+                          c clear storage areas 
+                          c   and store entry word 
+        "\d "             c mark word as definition 
+"\p " > store(part) "\p "   c keep as part of speech 
+"\d " > store(def)  "\w "   c mark def. as entry word 
+"\i " > store(ill)  "\t "   c mark illus. as 
+                            c    translation 
+"\t " > store(trans) "\i "  c mark translation as 
+                            c    illustration 
+endfile > out(def,part,word,trans,ill) 
+                            c output last entry
+@end example
+
+When the first ``\w''  is encountered, the program executes the 
+@i{out(def,part,word,trans,ill)} command. This is no problem, because when 
+nothing is stored in a storage area, nothing is output. 
+
+There is no problem 
+if, for example, some entries do not have illustrative sentences or apart 
+of speech. Why? At the beginning of each new entry, all the storage areas 
+are completely erased. Nothing is stored in an area unless the marker for 
+that area is found in the data. Thus, the following input would produce the 
+following output:
+
+@example
+ input                          output 
+ \w cat                         \w gato 
+ \p n                           \p n 
+ \d gato                        \d cat 
+ \i The cat is black.           \i El gato es negro. 
+ \t El gato es negro.           \t The cat is black. 
+ \w dog                         \w perro 
+ \p n                           \p n 
+ \d perro                       \d dog 
+ \w mouse                       \w raton 
+ \p n                           \p n 
+ \d raton                       \d mouse 
+  .                              . 
+  .                              . 
+  .                              .
+@end example
+
+If we had not used the @i{store(trans,ill,def,part,word)} command to erase 
+the storage areas, the illustrative sentences for the ``\w cat''  entry 
+would also have been printed out with the ``dog/perro'' entry and following 
+entries, until a new set of illustrative sentences in the input was 
+encountered. Whenever you see such results, you can be sure that some 
+storage area has not been cleared. 
+
+To get rid of blank lines before entries, add the following:
+
+@example
+nl "\w" > next 
+@end example
+
+just before the ``\w''  entry as it is. To output blank 
+lines, modify the ``\d''  entry to read:
+
+@example
+"\d" > store(def) nl "\w" 
+@end example
+
+This will put a blank line in front of the very first record, but that 
+should not be a problem. Another way of dealing with blank lines is 
+described in @ref{The Back Command}. 
+
+
+@node The Back Command
+@section The Back Command
+
+The command @i{back(v)} pulls back the previous number of characters which 
+were stored or output and treats them as if they were new input. 
+
+One of the main difficulties in writing a general change table is trying 
+to anticipate all their regular typing sequences --- both legitimate 
+variations as well as ``errors'' --- which occur in any manuscript. 
+
+An often-encountered problem is that of extra spaces or <ENTER>s. These 
+occur in various combinations and in varying numbers. Often in a printout, 
+it is desirable that a sequence of spaces be treated like one. (There 
+are exceptions, of course.) Without the @i{back} command there is no way 
+to effectively do so.
+
+The following command line causes any sequence of spaces to become one space:
+
+@example
+"  " > " " back(1)
+@end example
+
+This says, ``if there are two spaces, put out one instead; then put 
+that one character back into the input so that it is available to be 
+matched again in the table.''  Keep in mind that the  ``1'' in @i{back(1)} 
+does not refer to a storage area, but to the quantity of characters 
+to be moved back. See @ref{Command Description} for more information on the 
+@i{back} command.
+
+If the space is followed by another space --- ie, if there were originally 
+three spaces in a row --- then the space that was output and backed over, 
+plus the space following, will be a pair of spaces which will match 
+the entry above and be reduced to one space. This will continue for 
+however many spaces occur together. Finally just one space will be left.
+
+Another place stray spaces occur is at the ends of lines. The automatic 
+wrap feature of various edit programs removes such spaces, but people 
+still manage to get a few. The following command will remove a space 
+that precedes an <ENTER>. (Multiple spaces preceding the <ENTER> will 
+have been reduced to one by the command described earlier.)
+
+@example
+" " nl > nl back(1) 
+@end example
+
+This says, ``if a space immediately preceding a new line is matched, output 
+a new line; then back up so the new line is treated like input and is 
+available to be matched again in the table.'' Yet another source of multiple 
+spaces in printouts is blank lines --- multiple <ENTER>s. The following 
+command takes care of blank lines in the same way multiple spaces are 
+taken care of.
+
+@example
+nl nl > nl back(1) 
+@end example
+
+And the following command removes spaces from the beginnings of lines, 
+just as a previous one removed them from the ends:
+
+@example
+nl " " > nl back(1) 
+@end example
+
+Together these four force any sequence of spaces to be treated like a single 
+space, and any combination of spaces and <ENTER>s to be treated like a 
+single <ENTER>.
+
+But that is only one aspect of the difficulties needing to be dealt 
+with. It is not uncommon to find text files that include SIL Standard 
+Format markers or @TeX{} markers. These markers most commonly take the 
+form of a ``\''  followed by a lower case character and 
+then a space character. Markers are put in by the person 
+editing the file so that the file can be manipulated later by 
+utility programs (such as @sc{mse}). People are encouraged to 
+put the SIL Standard Format markers at the left margin 
+because it makes proofing and editing easier. But sometimes they don't. 
+It would be a simple matter to write a change table that put each ``\'' 
+on a new line. It would be as follows:
+
+@example
+"\" > nl "\" 
+@end example
+
+That would work fine, but what if the ``\'' was part of 
+something else that we wanted to match (like a ``\w,'' for instance)? 
+The ``\'' has already gone sailing past and been output. The @i{back(v)} 
+command can help us because it can take characters which have gone 
+``sailing past'' the table and put then back into the input file as 
+if they've never come through the table yet.
+
+In the following change table, the first line will catch each ``\'' 
+that is preceded by an <ENTER> (as SIL Standard Markers ought to be) so 
+that they won't be changed. The second and third lines will catch each 
+``\''  that isn't preceded by an <ENTER>, and put an <ENTER> in front of it. 
+There could be a potential problem with the third line, however.
+
+@example
+nl "\" > dup    c Don't add nl to "\" if not needed! 
+"\"   > nl "\" back(2) 
+"\"    > nl "\" back(2)  c This line is dangerous
+@end example
+
+The danger of the third line is that the program could be caught in 
+a loop. Once the ``\'' is matched, an <ENTER> is put in front of it, and 
+it is sent through the table again. It would again match at the backslash 
+if the first line of the table had not been included, or if we had said 
+@i{back(1)} instead of @i{back(2)}. An <ENTER> would again be put in front 
+of it and it would be sent through the table again... and again... and 
+again...
+
+How can such a thing be prevented? In this case we have included the 
+first line and @i{back(2)} so there will be no problem with the program 
+getting caught in a loop. This is the most obvious way, turning what 
+is to be backed over into something completely different so that no 
+piece of it will match at the same place again. But that isn't always 
+desirable.
+
+The second way is to be sure to include something to catch the repetitions, 
+such as a switch. (@xref{Switches}.) For example, the line could have been:
+
+@example
+"\" > ifn(checked) set(checked) nl "\" back(2) 
+      else "\" clear(checked) 
+      endif
+@end example
+
+It would catch itself when it attempted to send the same backslash 
+through for a second time, thus preventing the loop.
+
+Another solution, sometimes a better one, is to catch the output of 
+that dangerous entry (that might cause the program to go into a loop) and 
+do something else with it. The lines:
+
+@example
+nl "\" > dup "\"    > nl "***ERROR***" nl "\"
+@end example
+
+can be placed in the table. If a ``\''  is not at the beginning of a 
+line, the second entry would catch it, and draw attention to it in the 
+output file for later correction, rather than try to fix it, back it 
+into the input file, and match it again. 
+
+
+@node Groups
+@section Groups
+
+There are two commands associated with the group function. They are:
+
+@example
+group(name)    use(name)
+@end example
+
+These commands allow certain entries in the table to be available to 
+be matched while others are not.
+
+@subsubheading What @i{group(name)} Does
+
+This command is not used as part of a ``search'' > ``replace'' entry. 
+Rather, it is used on a line all by itself to mark the beginning of a 
+``group'' of changes. The changes in this group can be executed as if 
+they were the only changes in the table. The end of the group is marked 
+by either the end of the table, or another @i{group} command. 
+
+@subsubheading What @i{use(name)} Does
+
+Whenever more than one group is used, each must be appropriately 
+designated by a @i{group} command. Unless specified otherwise, the 
+program will start in @i{group(1)}. If numbers are not being used for 
+group names, the program will start in the first group in the table. To 
+begin in some other place, the use command must appear in the @i{begin} 
+entry. For example:
+
+@example
+begin > use(2) 
+@end example
+
+Although the above example specified @i{group(2)} as the 
+place to start, any group in the table could have been specified.
+
+The @i{use(name)} command can also be used to make a different group or 
+set of groups active during processing. The @i{name} argument tells @sc{mse} 
+which group or groups of changes to use from that point on, unless it 
+finds another @i{use} command. You should put @i{use(name)} only on the 
+right side of the wedge. Note that when @sc{mse} encounters a @i{use} 
+command, it @i{finishes the entry} which contains it; @i{use(name)} does 
+not constitute an exit from the entry.
+
+@subsubheading Example of the @i{group} and @i{use} commands
+
+In a bilingual dictionary, one might wish to make certain changes in the 
+orthography of one language without doing anything to the other language. 
+Let's suppose that you had a huge text file that was a bilingual dictionary, 
+one that a Spanish speaker would use to find the meaning of English words. A 
+text file for such a dictionary might be keyed in with each line preceded by 
+a SIL Standard Format marker as follows:
+
+@example
+ \w word in English 
+ \p part of speech in Spanish 
+ \d definition in Spanish 
+ \q qualifying comment in Spanish 
+ \i illustrative sentence in English 
+ \t translation of illustrative sentence in Spanish
+@end example
+
+And suppose the orthography change is to be in the English language. 
+Such a change would affect the @i{\w} and @i{\i} parts of the entry, but 
+not the @i{\p}, @i{\d}, @i{\q}, or @i{\t} parts.
+
+There are two ways, at least, to approach this problem. One way is 
+to use switches. (@xref{Switches}.) Another is to use groups. Consider 
+the following table:
+
+@example
+c Do orthography change for the \w and \i fields 
+group(1) 
+'\w ' > dup use(2)   c Go to group two, where the 
+'\i ' > dup use(2)   c   change occurs
+
+group(2) 
+'kw' > 'qu'          c Change kw to qu for \w and \i 
+'\p ' > dup use(1)   c Don't change these fields, go 
+'\d ' > dup use(1)   c   back to group one, where 
+'\q ' > dup use(1)   c   nothing happens to kw. 
+'\t ' > dup use(1)
+@end example
+
+What does this table say? First the line:
+
+@example
+group(1) 
+@end example
+
+identifies the beginning of a group. It tells the program 
+that the following changes belong to a group called @i{1}. The program will 
+always begin using the changes in group one when the program begins. The 
+lines:
+
+@example
+'\w ' > dup use(2)   c Go to group two, where the 
+'\i ' > dup use(2)   c   change occurs
+@end example
+
+tell the program that whenever it sees a @code{\w} or a @code{\i} @i{while 
+it is inside} @i{group(1)}, that it should duplicate what it has matched 
+(@i{dup} command) and go use the changes that are in group two. The next 
+line:
+
+@example
+group(2) 
+@end example
+
+identifies the beginning of the second group of changes. Inside 
+this group, that is, following the @i{group} command, are the changes, 
+such as:
+
+@example
+'kw' > 'qu'          c Change kw to qu for \w and \i 
+@end example
+
+These are the orthography changes that we want performed on the data in the 
+@code{\w} and @code{\i} fields. That is why those markers requested 
+@i{group(2)}. They are not all that is in @i{group(2)}, however. The 
+lines:
+
+@example
+'\p ' > dup use(1)   c Don't change these fields, go 
+'\d ' > dup use(1)   c   back to group one, where 
+'\q ' > dup use(1)   c   nothing happens to kw. 
+'\t ' > dup use(1)
+@end example
+
+catch all the other markers in the dictionary. They send them back 
+to the first group. There, the data following them passes to the output 
+file without any change in ``kw'', if that combination of letters happens 
+to occur. 
+
+@node Switches
+@section Switches
+
+@node Introduction
+@subsection Introduction
+
+The concept behind using switches is one that is familiar to everyone. 
+The problem is that the concept is not usually formalized. Consider the 
+following statements: 
+
+@itemize @minus{}
+@item 
+If it doesn't rain this morning, I'll water the lawn this evening. 
+
+@item
+If we have hamburgers this noon, I'll make pork chops for supper; 
+otherwise I'll fix hamburgers.
+
+@item
+If the gate is left open, the dog will run away. 
+
+@item
+If we don't get some gas now, we'll run out. 
+
+@item
+If George forgets to pick up the groceries on his way home from work, 
+we'll have pork and beans for supper.
+@end itemize
+
+Each of these embodies the concept of a switch. If something has or 
+has not happened:
+
+@itemize @minus{}
+@item
+it rains
+
+@item
+we eat hamburgers
+
+@item
+the gate is left open
+
+@item
+we buy gas
+
+@item
+George remembers the groceries
+@end itemize
+
+certain consequences follow or do not follow:
+
+@itemize @minus{}
+@item
+I water the lawn
+
+@item
+we have pork chops
+
+@item
+the dog runs away
+
+@item
+we run out of gas
+
+@item
+we eat pork and beans
+@end itemize
+
+The ``something''  that leads to the consequences is the condition. 
+Sometimes the consequences follow if the condition occurs:
+
+@itemize @minus{}
+
+@item
+If we have hamburgers this noon, I'll make pork chops for supper...
+@end itemize
+
+Sometimes the consequences follow if the condition does @i{not} occur: 
+
+@itemize @minus{}
+@item
+If it doesn't rain this morning, I'll water the lawn this evening.
+@end itemize
+
+Of course, @i{something} happens whether the condition is met or not. If 
+nothing else the consequences fail to occur: 
+
+@itemize @minus{}
+@item
+I don't water the lawn
+
+@item
+The dog doesn't run away
+
+@item
+We don't run out of gas
+@end itemize
+
+Sometimes there are alternate consequences:
+
+@itemize @minus{}
+@item
+I fix hamburgers
+
+@item
+We eat something other than pork and beans
+@end itemize
+
+The five statements above can be semi-formalized as follows.
+
+@itemize +
+@itemize +
+
+If not (rain in the morning) I will water the lawn this evening. 
+
+If (we have hamburgers at noon) we will have pork chops for supper else 
+we will have hamburgers for supper.
+
+If (the gate is left open) the dog will run away. 
+
+If not (fill the car with gas) we will run out of gas. 
+
+If not (George remembers the groceries) we will have pork and beans for 
+supper.
+
+@end itemize
+@end itemize
+
+In each case, the parenthesized condition can be regarded as a switch. 
+Switches have only two states: these are called @i{on} or @i{off} (or 
+@i{true} or @i{false}; or @i{set} or @i{clear}).
+
+A switch by itself doesn't necessarily do anything. The lack of morning 
+rain does not always result in the lawn being watered. I have to decide 
+that circumstances warrant the lawn being watered. Once that decision 
+is made, then I look about for any conditions that would affect my decision: 
+If it rains, I won't need to water lawn. Later, I check that condition 
+(or switch). Did it happen? (Is the switch set?) Then I proceed accordingly. 
+
+The nature of a switch, and its particular value, is that it allows 
+something that happened (or didn't happen) in the past to be taken into 
+account for a decision in the present.
+
+For people, remembering the past is no amazing feat; for a computer, 
+remembering the past must be done deliberately. Hence, computers use 
+formal switches. Actually, all of the computer's ``memory''  is an 
+elaborate array of switches controlled by other switches which are 
+controlled by a program which is a bunch of switches controlled by the 
+data --- which sets and clears switches. Fortunately, we need not worry 
+about all these levels upon levels of switch setting and testing. But it 
+is nice to be able to control some levels of it. This allows us to do 
+innovative things with the data.
+
+@node What the Commands Do
+@subsection What the Commands Do
+
+What types of switches are available in the @sc{mse} program? How are they 
+used?
+
+There are several commands connected with the switch feature of the 
+@sc{mse} program:
+
+@example
+clear(name)    if(name)
+else           ifn(name) 
+endif          set(name)
+@end example
+
+The @i{(name)} represents the name of the switch. 
+Other commands may use the same names, but there is no relationship 
+between the names for switches and any other names. Note that the 
+following commands:
+
+@example
+ifeq(name) 'string' 
+ifneq(name) 'string' 
+ifgt(name) 'string'
+@end example
+
+use the same concept of a switch, but the names refer to storage areas, 
+not to switch names. These commands are not described here, but in 
+@ref{Command Description}. Do not confuse them with the first list of 
+commands, some of which look very similar.
+
+Keep in mind as you read that the terms @i{set}, @i{on}, or @i{true} are 
+used synonymously with one another. The terms @i{clear}, @i{off}, or 
+@i{false} are also used synonymously with one another. 
+
+@subsubheading What @i{set(name)} does 
+
+The command @i{set(name)} causes switch @i{(name)} to be in the @i{on} or 
+@i{true} state. Switch @i{(name)} will remain set 
+until explicitly cleared. Hence it can be used for reference later 
+as a reminder or signal of what has gone before. The switch is cancelled 
+by the @i{clear(name)} command. When the table first starts running, all 
+switches are clear, or off.
+
+@subsubheading What @i{clear(name)} does
+
+The command @i{clear(name)} causes switch (name) to be in the @i{off} or 
+@i{false} state. Switch @i{(name)} will remain @i{off} until explicitly set. 
+When the @sc{mse} program is started and before any table entries are 
+executed, all switches are cleared, or turned off.
+
+@subsubheading What @i{if(name)} does
+
+The command @i{if(name)} checks to see if switch @i{(name)} is set. If it is 
+set, the commands following the if are executed. If it is not set, the 
+commands following the @i{if} are not executed (are skipped). This allows 
+commands to be executed only if a certain condition exists. 
+
+@subsubheading What @i{ifn(name)} does
+
+The command @i{ifn(name)} --- which is read ``if not @i{(name)}'' --- checks 
+to see if switch @i{(name)} is not set. If it is @i{not} set, the commands 
+following the @i{ifn} ARE executed. If the switch @i{is} set, the commands 
+following the @i{ifn} are SKIPPED. This allows commands to be executed only 
+if a certain condition does not exist.
+
+@subsubheading What @i{endif} does
+
+The command @i{endif} puts a boundary on the @i{if} or @i{ifn} command. 
+If the switch was such that the commands following the @i{if} or @i{ifn} 
+were being @i{skipped}, execution of commands will begin again at the 
+@i{endif} regardless of the setting of any previous switches. (Of course, 
+another @i{if} or @i{ifn} may be encountered immediately after the @i{endif} 
+which would again take into account switch settings.) If the commands 
+following the @i{if} or @i{ifn} are being executed, the @i{endif} has no 
+effect; execution continues.
+
+@subsubheading What @i{else} does
+
+If switch conditions are such that commands following the most recent 
+@i{if} or @i{ifn} are being executed, the @i{else} command causes the 
+commands following itself to be skipped. If the commands following the 
+@i{if} or @i{ifn} are being skipped, the @i{else} command causes the 
+commands following itself to be executed.
+
+In the following example:
+
+@example
+"a" > if(test) "a" else "b" endif 
+@end example
+
+If switch @i{test} is set, @i{a} will go to the output. If switch @i{test} 
+is not set, @i{b} will go to the output. The same result could have been 
+achieved by:
+
+@example
+"a" > if(test) "a" endif
+      ifn(test) "b" endif
+@end example
+
+@subsubheading An Example Using Switches
+
+For example, in a bilingual dictionary, one might wish to make certain 
+changes in the orthography of one language without doing anything to the 
+other language. Let's suppose that you had a huge text file that was a 
+bilingual dictionary that a Spanish speaker would use to find the meaning 
+of English words. A text file for such a dictionary might be keyed in with 
+each line preceded by a SIL Standard Format marker as follows:
+
+@example
+ \w word in English 
+ \p part of speech in Spanish 
+ \d definition in Spanish 
+ \q qualifying comment in Spanish 
+ \i illustrative sentence in English 
+ \t translation of illustrative sentence in Spanish
+@end example
+
+And suppose the orthography change is to be in the English language. 
+Such a change would affect the @code{\w} and @code{\i} parts of the entry, 
+but not the @code{\p}, @code{\d}, @code{\q}, or @code{\t} parts.
+
+There are two ways, at least, to approach this problem. One way is 
+to use switches. Another is to use groups (@xref{Groups}). Consider 
+the following table:
+
+@example
+c Do orthography change 
+
+'\w ' > dup set(qu)     c Set switch (qu) to change 
+'\i ' > dup set(qu)     c   kw to qu 
+'\p ' > dup clear(qu)   c Don't change these fields. 
+'\d ' > dup clear(qu)   c   Clear switch (qu) so 
+'\q ' > dup clear(qu)   c   nothing happens to kw. 
+'\t ' > dup clear(qu)
+
+'kw'  > if(qu) 'qu'     c Change kw to qu for \w and \i 
+        else dup 
+        endif
+@end example
+
+What does this table say? The line:
+
+@example
+'\w ' > dup set(qu)     c Set switch (qu) to change 
+'\i ' > dup set(qu)     c   kw to qu
+@end example
+
+tell the program that whenever it sees a @code{\w} or a @code{\i}, it should 
+duplicate what it has matched (@i{dup} command) and that it should set 
+switch @i{qu}. The next lines:
+
+@example
+'\p ' > dup clear(qu)   c Don't change these fields. 
+'\d ' > dup clear(qu)   c   Clear switch (qu) so 
+'\q ' > dup clear(qu)   c   nothing happens to kw. 
+'\t ' > dup clear(qu)
+@end example
+
+tell the program that whenever it sees any of the other markers, it 
+should duplicate what it has matched and clear switch @i{qu}, so that 
+switch @i{qu} will be inactive, in a sense. The next two lines:
+
+@example
+'kw' > if(qu) 'qu'      c Change kw to qu for \w and \i 
+       else dup 
+       endif
+@end example
+
+contain the orthography change we want performed on the data in the 
+@code{\w} and @code{\i} fields. They say, whenever a ``kw''  is 
+encountered anywhere in the data, check to see if switch @i{qu} has been set. 
+If it has, change it to ``qu.''  Otherwise, duplicate what was matched. 
+Note that this is identical in function to the following:
+
+@example
+'kw' > if(qu) 'qu'      c Change kw to qu for \w and \i 
+       endif 
+       ifn(qu) dup 
+       endif
+@end example
+
+The @i{else} command says look at the condition which preceded it. The 
+@i{endif} command says ignore what preceded, and look at what follows 
+without prejudice.
+
+So a switch in itself is something that can be used to allow the change 
+table to affect data or not affect data, depending on its condition. 
+
+
+@node Arithmetic Commands
+@section Arithmetic Commands
+
+There are five arithmetic commands:
+
+@example
+ add(name)    mul(name)
+ div(name)    sub(name)
+ mod(name) 
+@end example
+
+For each command, the syntax is the same:
+
+@example
+add(name) 'number' 
+@end example
+
+These commands are always used on the right side of the wedge. They all 
+work with @i{numeric strings}. A numeric string is a string that @sc{mse} can 
+convert to a value. Valid characters in a numeric string are ``0''  through 
+``9'' . It is valid to precede a string of numeric characters  with ``-''  
+or ``+'' . @sc{mse} will convert a @i{numeric string} to a @i{numeric value}. 
+Such values must be in the range of @minus{}2,147,483,639 to +2,147,483,639 
+(without the commas).
+
+@sc{mse} assumes that the specified storage area contains a valid numeric 
+string and that the string following the command is also a valid numeric 
+string. @sc{mse} will first convert both the string @i{in the specified 
+storage area} and the string @i{following the command} into numeric values. 
+The operation (@i{add}, @i{divide}, etc.) is then performed using the two 
+numeric values and the result is stored as a numeric string in the 
+specified storage area, @i{replacing the store's original contents}.
+
+The @i{cont(name)} function can be used instead of a numeric string (for 
+more information on the @i{cont(name)} command, @xref{Command Description}). 
+The numeric string following the arithmetic command can be any combination 
+of literal strings and @sc{ascii} characters. In other words, the expression  
+`34' is identical to the expression `3' d52 (@xref{Form of Changes} for an 
+explanation of using @sc{ascii} characters).
+
+The numeric string following the command is terminated by the next 
+command. In other words, @sc{mse} will regard everything following the 
+command up until the next command as part of the string to be operated 
+upon. 
+
+There are examples of these commands in @ref{Command Description}.
+
+@node Comparison
+@chapter Comparison with SIL CC
+
+The @sc{mse} program is very like to SIL (Summer Institute of Linguistics,
+Dallas, USA, @url{http://www.sil.org}) program @sc{cc} (Consistent Changes) 
+and inspired by it. C++ code of @sc{mse} is completely independent from the 
+code of @sc{cc} (author of @sc{mse} never seen it). Differences between 
+@sc{mse} and @sc{cc} version 7.5 are follows, @sc{mse}:
+
+@itemize *
+@item 
+doesn't support @emph{caseless} command;
+
+@item 
+capital and small letters differ only in the string literals;
+
+@item 
+always use binary mode during changes;
+
+@item 
+can use new commands @emph{backi}, @emph{decr}, @emph{not}, 
+@emph{prevsym}, @emph{preci}, @emph{symdup};
+
+@item 
+commands @emph{fol}, @emph{prec}, and @emph{wd} always work good;
+
+@item
+has no limitations on quantity of @emph{prec}, @emph{fol}, and @emph{wd} 
+commands;
+
+@item
+has no limitations on quantity of macros and groups;
+
+@item
+has no limitations on the length of lines in input files;
+
+@item
+has no limitations on number values for @emph{back}, @emph{omit}, and
+@emph{fwd} commands;
+
+@item
+can use %-comments;
+
+@item
+has no limitations on the depth of @emph{define} command nesting;
+
+@item
+can break long line into pieces by the backslash in the end of each (except 
+last) line-piece; 
+
+@item 
+can be used as filter. For example:
+
+@example
+(mse -t - -o - in.txt <<END 
+'a' > 'b'
+'ab' > 'ac'
+END
+)| wc;
+@end example
+
+@item output can be send to the file with the same name as file with input 
+data. For example:
+
+@example
+mse -t my.mse -o data.txt data.txt;
+@end example
+
+@item
+can generate @sc{html} file-report;
+
+@item
+can correct handle any of 0 (null), 10 (line feed, <ENTER>), 
+13 (carriage return), 26 (end of file mark in @sc{cp/m} and @sc{ms-dos})
+@sc{ascii} codes;
+
+@item
+has no debugger;
+
+@item
+has no command line dialog possibilities;
+
+@item
+search side @emph{begin} command may be in any line of changes table;
+
+@item
+has no necessity of using @emph{endfile} or @emph{dup} after @emph{endfile} 
+in search side;
+
+@item
+@emph{ifeq}, @emph{ifneq}, @emph{ifgt} commands always use byte-by-byte 
+string comparison comparing their length first;
+
+@item
+groups order has no any importance;
+
+@item
+@emph{endfile} and @emph{nl} commands is the real commands, not names for 
+the appropriate codes;
+
+@item
+@emph{incr} cannot increase store area size when overflow occurs;
+
+@item
+@emph{define} can use only one argument;
+
+@item
+command line options may be entered in any order;
+
+@item
+has no @emph{-i}, @emph{?}, @emph{-a}, @emph{-q}, @emph{-n}, @emph{-w}, 
+@emph{-m}, and @emph{-s} command line options;
+
+@item 
+can use @emph{-h}, @emph{-}@emph{-help}, @emph{-V}, and @emph{-l} command 
+line options;
+
+@item
+change table execution always starts from group @emph{1};
+
+@item
+can by @emph{excl} command close all active groups;
+
+@item
+one group commands can be broken into pieces, interlaced with contents of
+other groups.
+
+@item
+has no limitations on capacity of the stores;
+
+@item
+@emph{begin}, @emph{define}, and @emph{endfile} search side commands are 
+global. They belong to all groups.
+
+@item
+all undefined by @emph{define} macro procedures regarded as empty (do 
+nothing) operations.
+@end itemize
+
+@node Quick Reference
+@chapter Quick Reference
+
+@node Error Messages
+@section Error Messages
+
+This section lists error messages that result from some problem in your 
+table. 
+
+All error messages from the @sc{mse} program are preceded by @code{mse: }. 
+Then the error message will be given. If an error is found in the table, the 
+number of line containing the error must be displayed. Use @code{-l} option 
+if you want to trace @sc{mse} computations.
+
+The rest of this section is a list of the errors that @sc{mse} generates
+(number preceding message is the code returned to the operating system): 
+
+@subsubheading 2 --- can't open @i{filename} for read
+Non-existent or incorrect @emph{filename} was entered after @code{-t} option 
+or as input filename.
+
+@subsubheading 3 --- can't open @i{filename} for write
+Incorrect @emph{filename} was entered after @code{-o} or @code{-l} options. 
+
+@subsubheading 4 --- only one change table allowed
+Several @code{-t} options was encountered in command line.
+
+@subsubheading 5 --- unknown parameter found
+Only @code{t}, @code{o}, @code{l}, @code{h}, @code{V}, and @code{-help} are
+allowed after @code{-} in command line.
+
+@subsubheading 6 --- only one log file allowed
+Several @code{-l} options was encountered in command line.
+
+@subsubheading 7 --- only one output file allowed
+Several @code{-o} options was encountered in command line.
+
+@subsubheading 8 --- error in octal number, line @emph{number}
+An octal @sc{ascii} code was specified, but contains some character other 
+than 0, 1, 2, 3, 4, 5, 6, or 7. In other words, some 
+string of characters has been encountered which is not enclosed in quotation 
+marks that is neither a recognized command nor a valid octal @sc{ascii} 
+number.
+
+@subsubheading 9 --- error in number, line @emph{number}
+Some string of characters has been encountered is neither a recognized 
+command nor a valid @sc{ascii} number.
+
+@subsubheading 10 --- error in decimal number, line @emph{number}
+A decimal @sc{ascii} code was specified, but contains some character other 
+than 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9. Decimal codes are specified by 
+preceding them with the character @emph{d} or @emph{D}.
+
+@subsubheading 11 --- error in hexadecimal number, line @emph{number}
+A hexadecimal @sc{ascii} code was specified, but contains some character 
+other than 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f, A, B, C, D, E, 
+or F. Hexadecimal codes are specified by preceding them with the character 
+@emph{x} or @emph{X}. 
+
+@subsubheading 12 --- PREVSYM argument less than 1 in line @emph{number}
+
+@subsubheading 14 --- unknown or misplaced reserved word encountered in line @emph{number}
+A string of characters has been encountered which is not enclosed in 
+quotation marks but which also is not a legal command or a legal number. 
+Various control codes will produce this message, since they are not 
+considered legal characters. Only <TAB> and <ENTER> are legal 
+control codes in a table.
+
+Commands which are valid only on one side of the wedge will cause this 
+error if they are used on the other side of the wedge.
+
+This error also produced if after @emph{ifgt(name)}, @emph{ifeq(name)}, or
+@emph{ifneq(name)} placed command but not @emph{cont(name)}. 
+
+@subsubheading 15 --- unexpected end of line encountered in line @emph{number}
+A ' or " has been found in a line without a corresponding ' or " before the 
+end of the line. If several quoted strings occur in the line, any one of them 
+may be missing the quotation mark --- the program will not notice that 
+something is missing until the last quotation mark is unpaired. 
+
+@subsubheading 16 --- number too big, must be within the range 0--255, line @emph{number}
+Since numbers are used for the 256 @sc{ascii} codes, they should be within 
+the range 0 to 255.
+
+@subsubheading 17 --- duplicated > in line @emph{number}
+
+@subsubheading 18 --- syntax error in line @emph{number}
+After completing literal or command comma or parenthesis have encountered.
+
+@subsubheading 19 --- literal exceeds @emph{number} bytes in line @emph{number}
+No more than 2048 bytes are allowed in one string in the change table. 
+(Entering such a string really possible with many break-line backslashes.) 
+If longer string required break it into parts with @emph{begin end} 
+command sequence.
+
+@subsubheading 20 --- empty argument in line @emph{number}
+
+@subsubheading 21 --- ELSE without IF in line @emph{number}
+
+@subsubheading 22 --- ENDIF without IF in line @emph{number}
+
+@subsubheading 23 --- END without BEGIN in line @emph{number}
+
+@subsubheading 24 --- REPEAT without BEGIN in line @emph{number}
+
+@subsubheading 25 --- duplicated ELSE in line @emph{number}
+
+@subsubheading 26 --- duplicated ENDIF in line @emph{number}
+
+@subsubheading 27 --- error in DEFINE statement, line @emph{number}
+@emph{define} is not alone on the search side.
+
+@subsubheading 28 --- second argument is missing or bad
+It may occur in the command with two arguments (such as @emph{ifeq} or 
+@emph{add}) when the first argument is followed by a comma, a parenthesis or 
+a wedge.
+
+@subsubheading 29 --- duplicated BEGIN in line @emph{number}
+Only one initializing entry (with @emph{begin} on the search side) is 
+allowed for a change table.
+
+@subsubheading 30 --- BEGIN is not alone in search entry in line @emph{number}
+
+@subsubheading 31 --- duplicated ENDFILE in line @emph{number}
+Only one entry with @emph{endfile} on the search side is allowed for a 
+change table.
+
+@subsubheading 32 --- ENDFILE is not alone in search entry in line @emph{number}
+
+@subsubheading 33 --- misplaced UNSORTED statement, line @emph{number}
+@emph{unsorted} is allowed only in the initializing entry with @emph{begin} 
+on the search side.
+
+@subsubheading 34 --- missing open parenthesis, line @emph{number}
+The opening parenthesis is missing from a command which expects 
+an argument in parentheses. 
+
+@subsubheading 35 --- missing close parenthesis, line @emph{number}
+The closing parenthesis is missing from a command which expects an 
+argument in parentheses.
+
+@subsubheading 36 --- bad numerical argument in line @emph{number}
+One of the @emph{back}, @emph{backi}, @emph{fwd}, @emph{omit}, 
+@emph{prevsym}, or @emph{symdup} commands has been used and the value of 
+the specified argument is non-numerical, negative, or greater
+than 2,147,483,639. 
+
+@subsubheading 40 --- BACK exceeds buffer
+Attempt to get byte from empty output. 
+
+@subsubheading 42 --- INCR buffer is too big
+If the specified by @emph{incr} storage area consists of a huge number of the 
+symbols ``9'' then sometimes it may produce this error. (May be sure that 
+number must be really big, something like 10 in power 10000.)
+
+@subsubheading 43 --- DECR buffer is too big
+If the specified by @emph{decr} storage area consists of a huge number of the 
+symbols ``0'' then sometimes it may produce this error.
+
+@subsubheading 45 --- NEXT in the last line of change table
+
+@subsubheading 47 --- insufficient memory
+Current operation ask for dynamic memory and operating system answer 
+that required amount of memory is not available.
+
+@subsubheading 48 --- arithmetic operation with empty store
+Attempt to increment or decrement empty store.
+
+@subsubheading 49 --- arithmetic operation with non-number store
+One of the arithmetic commands (@emph{add}, @emph{sub}, @emph{mul}, 
+@emph{div}, or @emph{mod}) has been used and the contents of the 
+specified storage area does not have a number in it. To resolve this 
+error, you should be sure that the storage area contains only the 
+characters 0, 1, 2, 3, 4, 5, 6, 7, 8, or 9, preceded by an optional 
+@minus{} or + sign.
+ 
+@subsubheading 50 --- arithmetic overflow
+One of the arithmetic commands (@emph{add}, @emph{sub}, @emph{mul}, 
+@emph{div}, or @emph{mod}) has been used and either the contents of the 
+specified storage area or the 'numeric string' is outside the range 
+@minus{}2,147,483,639 to +2,147,483,639 (do not use commas). 
+
+@subsubheading 51 --- division by zero
+Attempt to divide by 0 in @emph{div} or @emph{mod} commands.
+
+@subsubheading 54 --- can't open temporary file
+Operating system cannot create required file.
+
+@subsubheading 55 --- can't write to temporary file
+File system is full or damaged.
+
+@subsubheading 56 --- SYMDUP exceeds buffer
+Attempt to duplicate a character outside the pattern space (match string).
+
+@subsubheading 57 --- can't seek position in temporary file
+Internal error or crash of operating system.
+
+@subsubheading 58 --- can't read from temporary file
+Internal error or crash of operating system.
+
+@subsubheading 59 --- OutStream::operator[] index too big
+Internal error.
+
+@subsubheading 60 --- InStream::operator[] index too big
+Internal error.
+
+
+@node Alphabetical Summary of Commands
+@section Alphabetical Summary of Commands
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab % @tab comment
+@item @tab `' @tab null match; null replacement 
+@item @tab add(name) @tab `number' add numeric string to area @emph{name}
+@item @tab any(name) @tab match any element of storage area @emph{name}
+@item @tab append(name) @tab store in area  @emph{name}, keep previous contents
+@item @tab back(v) @tab put last @emph{v} chars output back into input
+@item @tab backi(v) @tab take last @emph{v} chars from the input stream 
+history and put them into input
+@item @tab begin @tab beginning of table or nested block
+@item @tab c @tab comment
+@item @tab cont(name) @tab match or compare contents of area @emph{name}
+@item @tab clear(name) @tab clear switch @emph{name}
+@item @tab decr(name) @tab decrement number in storage area @emph{name}
+@item @tab define(name) @tab defines a set of commands called @emph{name} 
+@item @tab div(name) `number' @tab divide value in @emph{name} by numeric string
+@item @tab do(name) @tab execute set of commands called @emph{name}
+@item @tab dup @tab duplicate match string 
+@item @tab else @tab else 
+@item @tab end @tab end nested block
+@item @tab endfile @tab match or output end of job signal
+@item @tab endif @tab end @emph{if} (applies to all @emph{if}s)
+@item @tab endstore @tab end storing
+@item @tab excl(name) @tab exclude (make inactive) group @emph{name}
+@item @tab fol(name) @tab if following character is in area @emph{name}
+@item @tab fwd(v) @tab forward @emph{v} characters (does not process)
+@item @tab group(name) @tab specifies a group called @emph{name}
+@item @tab if(name) @tab if switch @emph{name} is set
+@item @tab ifeq(name) `string' @tab if contents of area @emph{name} equal string
+@item @tab ifgt(name) `string' @tab if contents of area @emph{name} exceed string
+@item @tab ifn(name) @tab if switch @emph{name} is not set
+@item @tab ifneq(name) `string' @tab negative of @emph{ifeq(name) `string'}
+@item @tab incl(name) @tab include (activate) group @emph{name}
+@item @tab incr(name) @tab increment number in storage area @emph{name}
+@item @tab mod(name) `number' @tab remainder when value in  @emph{name} is divided 
+by numeric string
+@item @tab mul(name) `number' @tab multiply value in @emph{name} by numeric string
+@item @tab next @tab perform commands in next entry
+@item @tab nl @tab match or output new line
+@item @tab not(name) @tab logical negate switch @emph{name}
+@item @tab omit(v) @tab omit next @emph{v} characters from input
+@item @tab out(name) @tab output storage area @emph{name}
+@item @tab outs(name) @tab output area @emph{name} (storing continues)
+@item @tab prec(name) @tab if preceding character is in area @emph{name}
+@item @tab preci(name) @tab if preceding character in the input stream 
+history is in area @emph{name}
+@item @tab prevsym(v) @tab if @emph{v}-th byte is equal to current
+@item @tab read @tab read input from keyboard
+@item @tab repeat @tab repeat from preceding @emph{begin} 
+@item @tab set(name) @tab set switch @emph{name}
+@item @tab store(name) @tab store in area @emph{name} (discard previous contents)
+@item @tab sub(name) `number' @tab subtract numeric string from value in 
+@emph{name} 
+@item @tab symdup(v) @tab duplicate @emph{v}-th byte of match string
+@item @tab use(name) @tab use group called @emph{name}
+@item @tab unsorted @tab set using of unsorted change table
+@item @tab wd(name) @tab if chars before and after in area @emph{name}
+@item @tab write `string' @tab output following string to screen
+@item @tab wrstore(name) @tab output storage area @emph{name} to screen
+@end multitable
+
+@node Commands by Logical groupings
+@section Commands by Logical groupings
+
+@subsubheading Commands Using Switches:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab clear(name) @tab clear switch @emph{name}
+@item @tab if(name) @tab if switch @emph{name} is set
+@item @tab ifn(name) @tab if switch @emph{name} is not set
+@item @tab not(name) @tab logical negate switch @emph{name}
+@item @tab set(name) @tab set switch @emph{name}
+@end multitable
+
+
+@subsubheading Commands Using Store Names or Related to Storage Areas:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab add(name) @tab `number' add numeric string to area @emph{name}
+@item @tab any(name) @tab match any element of storage area @emph{name}
+@item @tab append(name) @tab store in area  @emph{name}, keep previous contents
+@item @tab cont(name) @tab match or compare contents of area @emph{name}
+@item @tab decr(name) @tab decrement number in storage area @emph{name}
+@item @tab div(name) `number' @tab divide value in @emph{name} by numeric string
+@item @tab endstore @tab end storing
+@item @tab fol(name) @tab if following character is in area @emph{name}
+@item @tab ifeq(name) `string' @tab if contents of area @emph{name} equal string
+@item @tab ifgt(name) `string' @tab if contents of area @emph{name} exceed string
+@item @tab ifneq(name) `string' @tab negative of @emph{ifeq(name) `string'}
+@item @tab incr(name) @tab increment number in storage area @emph{name}
+@item @tab mod(name) `number' @tab remainder when value in  @emph{name} is divided 
+by numeric string
+@item @tab mul(name) `number' @tab multiply value in @emph{name} by numeric string
+@item @tab out(name) @tab output storage area @emph{name}
+@item @tab outs(name) @tab output area @emph{name} (storing continues)
+@item @tab prec(name) @tab if preceding character is in area @emph{name}
+@item @tab preci(name) @tab if preceding character in the input stream 
+history is in area @emph{name}
+@item @tab store(name) @tab store in area @emph{name} (discard previous contents)
+@item @tab sub(name) `number' @tab subtract numeric string from value in 
+@emph{name} 
+@item @tab wd(name) @tab if chars before and after in area @emph{name}
+@item @tab wrstore(name) @tab output storage area @emph{name} to screen
+@end multitable
+
+
+@subsubheading Arithmetic Commands:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab add(name) @tab `number' add numeric string to area @emph{name}
+@item @tab decr(name) @tab decrement number in storage area @emph{name}
+@item @tab div(name) `number' @tab divide value in @emph{name} by numeric string
+@item @tab incr(name) @tab increment number in storage area @emph{name}
+@item @tab mod(name) `number' @tab remainder when value in  @emph{name} is divided 
+by numeric string
+@item @tab mul(name) `number' @tab multiply value in @emph{name} by numeric string
+@item @tab sub(name) `number' @tab subtract numeric string from value in 
+@emph{name} 
+@end multitable
+
+@subsubheading Ordinary Number Commands:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab back(v) @tab put last @emph{v} chars output back into input
+@item @tab backi(v) @tab take last @emph{v} chars from the input stream 
+history and put them into input
+@item @tab fwd(v) @tab forward @emph{v} characters (does not process)
+@item @tab omit(v) @tab omit next @emph{v} characters from input
+@item @tab prevsym(v) @tab if @emph{v}-th byte is equal to current
+@item @tab symdup(v) @tab duplicate @emph{v}-th byte of match string
+@end multitable
+
+
+@subsubheading Commands Using Group Names:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab excl(name) @tab exclude (make inactive) group @emph{name}
+@item @tab group(name) @tab specifies a group called @emph{name}
+@item @tab incl(name) @tab include (activate) group @emph{name}
+@item @tab use(name) @tab use group called @emph{name}
+@end multitable
+
+@subsubheading Commands that can Cause a Loop:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab back(v) @tab if not outputting something different or using a 
+different group 
+@item @tab backi(v) @tab if not outputting something different or using a 
+different group 
+@item @tab repeat @tab if no way to stop repeating
+@item @tab `' (null match) @tab if not used with @emph{fwd}, @emph{omit}, or 
+@emph{use}
+@item @tab do(name) @tab 
+@item @tab define(name) @tab if 2 or more defined procedures call each other
+@end multitable
+
+
+
+@subsubheading Commands Using Defined Procedures (Macros):
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab define(name) @tab defines a set of commands called @emph{name} 
+@item @tab do(name) @tab execute set of commands called @emph{name}
+@item @tab next @tab perform commands in next entry
+@end multitable
+
+
+@subsubheading Commands Involving the Screen or Keyboard:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab read @tab read input from keyboard
+@item @tab write `string' @tab output following string to screen
+@item @tab wrstore(name) @tab output storage area @emph{name} to screen
+@end multitable
+
+
+@subsubheading Nested Block Commands:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab begin @tab beginning of nested block
+@item @tab else @tab else 
+@item @tab end @tab end nested block
+@item @tab endif @tab end of conditional set of commands
+@item @tab if(name) @tab if switch @emph{name} is set
+@item @tab ifeq(name) `string' @tab if contents of area @emph{name} equal string
+@item @tab ifgt(name) `string' @tab if contents of area @emph{name} exceed string
+@item @tab ifn(name) @tab if switch @emph{name} is not set
+@item @tab ifneq(name) `string' @tab negative of @emph{ifeq(name) `string'}
+@item @tab repeat @tab repeat from preceding @emph{begin} 
+@end multitable
+
+
+@subsubheading Commands which occur Only on the Search Side:
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab any(name) @tab match any element of storage area @emph{name}
+@item @tab define(name) @tab defines a set of commands called @emph{name} 
+@item @tab fol(name) @tab if following character is in area @emph{name}
+@item @tab prec(name) @tab if preceding character is in area @emph{name}
+@item @tab preci(name) @tab if preceding character in the input stream 
+history is in area @emph{name}
+@item @tab prevsym(v) @tab if @emph{v}-th byte is equal to current
+@item @tab wd(name) @tab if chars before and after in area @emph{name}
+@end multitable
+
+
+@subsubheading Commands which may occur on Either Side: 
+
+@multitable @columnfractions .03 .27 .6 .1
+@item @tab begin @tab beginning of table or nested block
+@item @tab cont(name) @tab match or compare contents of area @emph{name}
+@item @tab endfile @tab match or output end of job signal
+@item @tab nl @tab match or output new line
+@item @tab `' @tab null match; null replacement 
+@end multitable
+@page
+
+@node ASCII Codes
+@section ASCII Codes
+
+@subsubheading ASCII Control Codes and Space Code
+
+@example
+Decimal Hexadecimal  Octal  Character Abbrev Meaning 
+------------------------------------------------------------ 
+   0         0         0       ^@@      NUL  null 
+   1         1         1       ^A      SOH 
+   2         2         2       ^B      STX 
+   3         3         3       ^C      EXT  exit 
+   4         4         4       ^D      EOT  end of tape 
+   5         5         5       ^E      ENQ 
+   6         6         6       ^F      ACK 
+   7         7         7       ^G      BEL  bell 
+   8         8         10      ^H      BS   back space 
+   9         9         11      ^I      HT   horizontal tab 
+   10        A         12      ^J      LF   line feed 
+   11        B         13      ^K      VT   vertical tab 
+   12        C         14      ^L      FF   form feed 
+   13        D         15      ^M      CR   carriage return 
+   14        E         16      ^N      SO 
+   15        F         17      ^O      SI 
+   16        10        20      ^P      SLE 
+   17        11        21      ^Q      DC1 
+   18        12        22      ^R      DC2 
+   19        13        23      ^S      DC3 
+   20        14        24      ^T      DC4 
+   21        15        25      ^U      NAK 
+   22        16        26      ^V      SYN 
+   23        17        27      ^W      ETB 
+   24        18        30      ^X      CAN 
+   25        19        31      ^Y      EM 
+   26        1A        32      ^Z      EOF  end of file 
+   27        1B        33      ^[      ESC  escape 
+   28        1C        34      ^\      FS 
+   29        1D        35      ^]      GS 
+   30        1E        36      ^^      RS 
+   31        1F        37      ^       US
+   32        20        40              SPACE 
+   127       7F        177             DELETE 
+@end example
+@page
+
+@subsubheading Other ASCII Codes 
+
+@example
+Decimal Hexadecimal  Octal  Character 
+------------------------------------------------------------ 
+   33        21        41      ! 
+   34        22        42      " 
+   35        23        43      | 
+   36        24        44      $ 
+   37        25        45      % 
+   38        26        46      & 
+   39        27        47      ' 
+   40        28        50      ( 
+   41        29        51      ) 
+   42        2A        52      * 
+   43        2B        53      + 
+   44        2C        54      , 
+   45        2D        55      - 
+   46        2E        56      . 
+   47        2F        57      / 
+   48        30        60      0 
+   49        31        61      1 
+   50        32        62      2 
+   51        33        63      3 
+   52        34        64      4 
+   53        35        65      5 
+   54        36        66      6 
+   55        37        67      7 
+   56        38        70      8 
+   57        39        71      9 
+   58        3A        72      : 
+   59        3B        73      ; 
+   60        3C        74      < 
+   61        3D        75      = 
+   62        3E        76      > 
+   63        3F        77      ? 
+   64        40        100     @@ 
+   65        41        101     A 
+   66        42        102     B 
+   67        43        103     C 
+   68        44        104     D 
+   69        45        105     E 
+   70        46        106     F 
+   71        47        107     G 
+   72        48        110     H 
+   73        49        111     I 
+   74        4A        112     J 
+   75        4B        113     K 
+   76        4C        114     L 
+   77        4D        115     M 
+   78        4E        116     N 
+   79        4F        117     O 
+   80        50        120     P
+@end example
+
+@subsubheading Other ASCII Codes (continued) 
+
+@example
+Decimal Hexadecimal  Octal  Character 
+------------------------------------------------------------ 
+   81        51        121     Q 
+   82        52        122     R 
+   83        53        123     S 
+   84        54        124     T 
+   85        55        125     U 
+   86        56        126     V 
+   87        57        127     W 
+   88        58        130     X 
+   89        59        131     Y 
+   90        5A        132     Z 
+   91        5B        133     [ 
+   92        5C        134     \ 
+   93        5D        135     ] 
+   94        5E        136     ^ 
+   95        5F        137     _ 
+   96        60        140     ` 
+   97        61        141     a 
+   98        62        142     b 
+   99        63        143     c 
+   100       64        144     d 
+   101       65        145     e 
+   102       66        146     f 
+   103       67        147     g 
+   104       68        150     h 
+   105       69        151     i 
+   106       6A        152     j 
+   107       6B        153     k 
+   108       6C        154     l 
+   109       6D        155     m 
+   110       6E        156     n 
+   111       6F        157     o 
+   112       70        160     p 
+   113       71        161     q 
+   114       72        162     r 
+   115       73        163     s 
+   116       74        164     t 
+   117       75        165     u 
+   118       76        166     v 
+   119       77        167     w 
+   120       78        170     x 
+   121       79        171     y 
+   122       7A        172     z 
+   123       7B        173     @{ 
+   124       7C        174     | 
+   125       7D        175     @} 
+   126       7E        176     ~ 
+@end example
+
+@node Literature
+@chapter Literature
+
+@enumerate
+@item
+``Consistent Changes User's Guide'' JAARS, 1991.
+
+@item
+K. Seitz ``Consistent Changes for Publishing'' SIL, 1996.
+@end enumerate
+
+@bye
