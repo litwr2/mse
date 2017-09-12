@@ -1,6 +1,6 @@
 Basic Installation
 ==================
-You need C++ compiler only.
+You need C++ compiler only to build the program.
 
 The simplest way to compile this program is:
 
@@ -13,6 +13,20 @@ The simplest way to compile this program is:
 
   4. Type `make install' to install the program (install documentation 
      manually).
+
+  5. Type `make doc' to create the documentation in both html and pdf
+     formats.
+
+  6. Type `make html' to create only `mse.html' documentation.  This step
+     uses `tex2html' utility.  See http://litwr2.atspace.eu/mse.html
+
+  7. Type `make pdf' to create only `mse.pdf' documentation.  This step
+     uses `texi2pdf' utility of Texinfo package.
+     See http://litwr2.atspace.eu/mse.pdf
+
+  8. If you need to generate the documentation in Russian look at README
+     in Russian for more information.
+     See http://litwr2.atspace.eu/mse1.ru.pdf
 
 
 A NOTE ON USAGE
@@ -27,7 +41,7 @@ suggestions or patches.
 
 	Vladimir Lidovski
 	litwr@yandex.ru
-	http://litwr.boom.ru
+	http://litwr2.atspace.eu
 
 COPYRIGHT/LICENSE
 -----------------
@@ -38,3 +52,4 @@ COPYRIGHT/LICENSE
 is available via the Web at <http://www.gnu.org/copyleft/gpl.html>. The GPL
 is designed to allow you to alter and redistribute the package, as long as
 you do not remove that freedom from others.
+

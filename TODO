@@ -1,0 +1,9 @@
+bugfixes
+beginfile
+lineno
+filename
+back (backi) -- warning when reaches beginfile
+openfile
+nextfile
+test log with rules with '' at left part
+error when -t FILE and FILE is missed

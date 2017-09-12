@@ -14,7 +14,7 @@ exefn.o: exefn.cpp data.h
 classes.o: classes.cpp data.h
 
 clean:
-	-rm mse *.o test.out test.html
+	-rm -f mse *.o test.out *.html *.log *.toc *.vr *.tp *.ky *.pg *.pdf *.cp *.aux *.fn
 
 install:
 	install -m 755 -s mse $(BINDIR)
@@ -25,3 +25,11 @@ wc:
 test:
 	./mse -t test.mse -o test.out -l test.html test.in test.smp
 	-diff test.out test.smp
+
+doc: html pdf
+
+html: mse.texi
+	texi2html $< >mse.html
+
+pdf: mse.texi
+	texi2pdf $<

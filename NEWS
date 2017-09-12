@@ -1,1 +1,3 @@
 version 2.02:  The C++ syntax is adjusted to new C++ standards
+version 2.02-github r2:  Warnings cleaned
+version 2.02-github r3:  Documentation generation added
