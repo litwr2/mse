@@ -101,7 +101,7 @@ unsigned char OutStream::pop(void) {
 }
 
 unsigned char &OutStream::operator[](unsigned int i) {
-  unsigned char t[OBUFSZ];
+  static unsigned char t[OBUFSZ];
   unsigned long savefpos;
   if (i >= len)
     throw xccErr(59);

@@ -26,7 +26,7 @@ int quotemode = 0 /* 0 - std, 1 - quote */, line = 0,
   lexi = 0 /* lexb index */, sorted = 1;
 
 struct RWElem {
-  char *name;
+  const char *name;
   void (*fp)(void);
 } rws[QRWS] = {
 {"FOL", fol},       {"PRECI", preci},    {"WD", wd},          {"ANY", any},

@@ -73,7 +73,7 @@ long zindec2(unsigned char *s, int len ) {
   return n;
 }
 
-void xDbgInfoS(unsigned char *s, int len) {
+void xDbgInfoS(const unsigned char *s, int len) {
   if (logfile) {
     int qm = 0;
     char t[17];
@@ -99,7 +99,7 @@ void xDbgInfoS(unsigned char *s, int len) {
   }
 }
 
-void xDbgInfo(char *s) {
+void xDbgInfo(const char *s) {
   if (logfile) {
     strcat(logPattern, " ");
     strcat(logPattern, s);
@@ -109,14 +109,14 @@ void xDbgInfo(char *s) {
   }
 }
 
-void xDbgInfo0(char *s) {
+void xDbgInfo0(const char *s) {
   if (logfile) {
     strcat(logPattern, " ");
     strcat(logPattern, s);
   }
 }
 
-void xDbgInfo5(char *s) {
+void xDbgInfo5(const char *s) {
   if (logfile) {
     char t[TMPSZ];
     strcat(logPattern, " ");
@@ -302,7 +302,7 @@ void DbgInfoS(unsigned char *s, int len) {
   }
 }
 
-char* toHTML(char *s) {
+char* toHTML(const char *s) {
   static char tmpstr[TMPSZ];
   tmpstr[0] = '\0';
   for (unsigned int i = 0; i < strlen(s); i++)
@@ -315,7 +315,7 @@ char* toHTML(char *s) {
   return tmpstr;
 }
 
-void DbgInfo6(char *s) {
+void DbgInfo6(const char *s) {
   if (logfile) {
     fprintf(logfile, " %s", toHTML(s));
     fprintf(logfile, "(%s)", toHTML(logNames[SN][pftmp->argi]));
@@ -326,19 +326,19 @@ void DbgInfo6(char *s) {
   }
 }
 
-void DbgInfo5(char *s) {
+void DbgInfo5(const char *s) {
   if (logfile)
     fprintf(logfile, " %s(%d)", toHTML(s), pftmp->argi);
 }
 
-void DbgInfo1234(ArgMode m, char *s) {
+void DbgInfo1234(ArgMode m, const char *s) {
   if (logfile) {
     fprintf(logfile, " %s", toHTML(s));
     fprintf(logfile, "(%s)", toHTML(logNames[m][pftmp->argi]));
   }
 }
 
-void DbgInfo0(char *s) {
+void DbgInfo0(const char *s) {
   if (logfile)
     fprintf(logfile, " %s", toHTML(s));
 }

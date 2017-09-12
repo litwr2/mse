@@ -19,7 +19,7 @@ OutStream *sarrx, *soutx /*standard output*/, *curoutx /*current output*/,
 FuncElem **marr;
 OpStack *pstack;
 
-void errormsg(int n, int line = 0) {
+void errormsg(int n, long line = 0) {
   if (n >= 40)
     fprintf(stderr, "mse: run-time error: ");
   else if (n != 1)
