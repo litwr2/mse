@@ -18,7 +18,7 @@ The simplest way to compile this program is:
      formats.
 
   6. Type `make html' to create only `mse.html' documentation.  This step
-     uses `tex2html' utility.  See http://litwr2.atspace.eu/mse.html
+     uses `tex2html' utility.  See https://litwr2.github.io/mse.html
 
   7. Type `make pdf' to create only `mse.pdf' documentation.  This step
      uses `texi2pdf' utility of Texinfo package.
