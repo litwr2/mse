@@ -38,11 +38,11 @@ a'   %'ab' > 'ba'
 '1' cont(n) '1' > add(n)'23' mul(n)'17' sub(n)'18' div(n)'11' sub(n)'200'
     decr(n) mul(n)cont(n) incr(n) '(' out(n) ')'
 
-'111' > write 'Enter numbers several times but only the last correct' nl 
+'111' > write 'Enter numbers several times but only the last correct' nl
     begin do(m0) wrstore(n) write ': ' 
     store(i1) read endstore ifneq(i1)cont(n) repeat endif end
     begin do(m0) write 'greater than 24: ' store(i2) read endstore 
-    ifgt(i2)'24' else repeat endif end  
+    ifgt(i2)'24' else repeat endif end
     mod(i2)'1' add(i2)cont(i1) sub(i2)'24' store(i1) outs(i2) '1' outs(i1) 
     out(i1) '17' back(5)
 

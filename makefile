@@ -1,4 +1,3 @@
-#CXXFLAGS = -gstabs
 CXXFLAGS = -O3
 LDFLAGS = -lstdc++
 BINDIR=/usr/local/bin
